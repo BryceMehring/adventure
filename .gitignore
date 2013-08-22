@@ -1,3 +1,9 @@
+#output dir
+bin/
+
+# windows
+*.exe
+
 # Compiled Object files
 *.slo
 *.lo
@@ -6,8 +12,43 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
+*.dll
 
 # Compiled Static libraries
 *.lai
 *.la
 *.a
+*.lib
+
+#cmake
+*.rule
+*.stamp
+*.depend
+*.bin
+*.list
+*.check_cache
+*.ilk
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles/
+
+#visual studio
+*.vcxproj
+*.obj
+*.tlog
+*.lastbuildstate
+*.sln
+*.log
+*.cd
+*.cache
+*.filters
+*.opensdf
+*.user
+*.suo
+*.sdf
+*.pdb
+*.cxx
+
+
+#other
+stats.txt
