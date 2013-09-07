@@ -35,8 +35,8 @@ void SpaceShip::Render(IRenderer& renderer)
 
 
 	std::stringstream stream;
-	stream << "("<<m_pos.x << ","<<m_pos.y<<")";
-	renderer.DrawString(stream.str().c_str(),m_pos,glm::vec2(40.0f,50.0f));
+	stream << "("<<int(m_pos.x) << ","<<int(m_pos.y)<<")";
+	renderer.DrawString(stream.str().c_str(),m_pos,glm::vec2(20.0f,25.0f),glm::vec3(1),0,::FontAlignment::Center);
 }
 
 UserControlledSpaceShip::UserControlledSpaceShip()
