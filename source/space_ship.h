@@ -3,26 +3,36 @@
 
 #include <glm/glm.hpp>
 
-/*class IRenderable
-{
-
-};*/
-
 class SpaceShip
 {
 public:
 
-	SpaceShip();
+	SpaceShip(unsigned int tile, const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
 
 	virtual void Update(float dt, class Camera*);
 	virtual void Render(class IRenderer&);
 
-
 protected:
 
 	glm::vec3 m_pos;
+	unsigned int m_tile;
 	float m_fAngle;
 	float m_fSpeed;
+	bool m_bVisable;
+};
+
+class AISpaceShip : public SpaceShip
+{
+public:
+
+	AISpaceShip(unsigned int tile,const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
+
+	virtual void Update(float dt, class Camera*);
+
+private:
+
+	float m_fTime;
+
 };
 
 class UserControlledSpaceShip : public SpaceShip
@@ -34,8 +44,6 @@ public:
 	virtual void Update(float dt, class Camera*, class IKMInput&);
 
 private:
-
-	//virtual void Render(class IRenderer&);
 
 };
 

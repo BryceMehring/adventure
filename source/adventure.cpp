@@ -7,8 +7,9 @@
 #include <sstream>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtc/random.hpp>
 
-extern "C" IPlugin* CreatePlugin()
+extern "C" _declspec(dllexport) IPlugin* CreatePlugin()
 {
 	return new adventure();
 }
@@ -26,6 +27,14 @@ void adventure::Init(Game& game)
 
 	m_pCamera->AddRef();
 	game.GetRenderer().SetCamera(m_pCamera);
+
+	m_enemies.reserve(5);
+	for(unsigned int i = 0; i < 2000; ++i)
+	{
+		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
+		unsigned int shipTile = rand() % 5;
+		m_enemies.push_back(std::auto_ptr<SpaceShip>(new AISpaceShip(shipTile,pos)));
+	}
 }
 
 // Called only once when the plugin is destroyed
@@ -34,10 +43,15 @@ void adventure::Destroy(Game& game)
 	ReleaseCamera(m_pCamera);
 }
 
-// Called every frame to update the date of the game
+// Called every frame to update the state of the game
 void adventure::Update(Game& game)
 {
 	m_spaceShip.Update(game.GetDt(),m_pCamera,game.GetInput());
+
+	for(auto iter = this->m_enemies.begin(); iter != m_enemies.end(); ++iter)
+	{
+		(*iter)->Update(game.GetDt(),m_pCamera);
+	}
 }
 
 // Called every frame to render the game
@@ -55,7 +69,13 @@ void adventure::Draw(Game& game)
 		zPos += 50;
 	}
 
-
 	m_spaceShip.Render(renderer);
+
+	for(auto iter = this->m_enemies.begin(); iter != m_enemies.end(); ++iter)
+	{
+		(*iter)->Render(renderer);
+	}
+
+	
 }
 

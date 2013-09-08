@@ -5,6 +5,8 @@
 #include "space_ship.h"
 #include "Camera.h"
 
+#include <vector>
+
 class adventure : public IGameState
 {
 public:
@@ -36,6 +38,7 @@ public:
 private:
 
 	UserControlledSpaceShip m_spaceShip;
+	std::vector<std::auto_ptr<SpaceShip>> m_enemies;
 	Camera* m_pCamera;
 };
 
