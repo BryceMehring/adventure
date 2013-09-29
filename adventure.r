@@ -1,2 +1,3 @@
-texture ship textures/ships.png
+animation ship textures/ships.png
 texture stars textures/stars.png
+texture beam textures/ball.png

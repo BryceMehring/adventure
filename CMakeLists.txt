@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 2.8)
-project (adventure CXX)
+cmake_minimum_required(VERSION 2.8)
+project(adventure CXX)
 
 # The version number.
 set(ENGINE_VERSION_MAJOR 1)
@@ -15,26 +15,38 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../GameEngine/CM
 include("${CMAKE_SOURCE_DIR}/../GameEngine/CMake/CompileFlags.cmake")
 
 find_package(GAME_ENGINE)
-if(GAME_ENGINE_FOUND)
-  include_directories(${GAME_ENGINE_INCLUDE_DIR})
-  include_directories(${GAME_ENGINE_INCLUDE_DIR}/interfaces)
-  include_directories(${GAME_ENGINE_INCLUDE_DIR}/../common)
-endif (GAME_ENGINE_FOUND)
+include_directories(${GAME_ENGINE_INCLUDE_DIR})
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/interfaces)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/../common)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/../QuadTree)
 
 find_package(GLM)
-if(GLM_FOUND)
-  include_directories(${GLM_INCLUDE_DIR})
-endif (GLM_FOUND)
+include_directories(${GLM_INCLUDE_DIR})
 
-find_package(ANGELSCRIPT)
-if(ANGELSCRIPT_FOUND)
-  include_directories(${ANGELSCRIPT_INCLUDE_DIR})
-  include_directories(${ANGELSCRIPT_ADDON_INCLUDE_DIR})
-endif(ANGELSCRIPT_FOUND)
+find_package (ANGELSCRIPT)
+include_directories(${ANGELSCRIPT_INCLUDE_DIR})
+include_directories(${ANGELSCRIPT_ADDON_INCLUDE_DIR})
 
-add_library(adventure MODULE source/space_ship.h
-							 source/space_ship.cpp
-							 source/adventure.h
-							 source/adventure.cpp)
+set(adventure_HEADERS
+	source/adventure.h
+	source/IDestroyable.h
+	source/ships/AISpaceShip.h
+	source/ships/UserControlledSpaceShip.h
+	source/ships/SpaceShip.h
+	source/ships/weapons/spaceShipBeam.h
+	)
 
-target_link_libraries(adventure ${CMAKE_SOURCE_DIR}/../GameEngine/bin/libcommon.so ${GAME_ENGINE_LIBRARY_DEBUG})
+set(adventure_SOURCE
+	source/adventure.cpp
+	source/ships/AISpaceShip.cpp
+	source/ships/UserControlledSpaceShip.cpp
+	source/ships/SpaceShip.cpp
+	source/ships/weapons/spaceShipBeam.cpp
+	)
+
+
+add_library(adventure MODULE ${adventure_HEADERS} ${adventure_SOURCE})
+target_link_libraries(adventure ${CMAKE_SOURCE_DIR}/../GameEngine/bin/libcommon.so ${CMAKE_SOURCE_DIR}/../GameEngine/bin/libQuadTree.a ${GAME_ENGINE_LIBRARY_DEBUG} )
+
+#include_directories(${CMAKE_SOURCE_DIR}/source)
+

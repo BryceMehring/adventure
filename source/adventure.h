@@ -2,14 +2,18 @@
 #define _ADVENTURE_
 
 #include "IGameState.h"
-#include "space_ship.h"
 #include "Camera.h"
+#include "QuadTree.h"
+#include "ships/UserControlledSpaceShip.h"
 
 #include <vector>
+#include <memory>
 
 class adventure : public IGameState
 {
 public:
+
+	adventure();
 
 	// returns the type of the plug-in
 	virtual DLLType GetPluginType() const { return DLLType::Game; }
@@ -40,6 +44,7 @@ private:
 	UserControlledSpaceShip m_spaceShip;
 	std::vector<std::auto_ptr<SpaceShip>> m_enemies;
 	Camera* m_pCamera;
+	QuadTree m_quadTree;
 };
 
 #endif // _ADVENTURE_
