@@ -42,7 +42,6 @@ bool SquidSpaceShip::Update(float dt, Camera* pCamera, QuadTree& tree)
 		m_frame = m_direction*3;
 	}
 
-	m_tile = m_frame;
 	m_spriteAnimationTime += dt;
 
 	if(m_spriteAnimationTime >= 0.3)
