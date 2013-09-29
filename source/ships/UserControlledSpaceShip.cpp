@@ -2,7 +2,7 @@
 #include "IKMInput.h"
 #include "Camera.h"
 
-#include <GLFW/glfw3.h>
+//#include <GLFW/glfw3.h>
 
 UserControlledSpaceShip::UserControlledSpaceShip() : SpaceShip(3,glm::vec3(0.0f,0.0f,-50.0f))
 {
@@ -37,13 +37,13 @@ bool UserControlledSpaceShip::Update(float dt, Camera* pCam, IKMInput& input, Qu
 		m_tile = (m_tile + 1) % 5;
 	}
 
-	if(input.KeyDown(GLFW_KEY_SPACE,false))
+	/*if(input.KeyDown(GLFW_KEY_SPACE,false))
 	{
 		//m_bDrawLazers = !m_bDrawLazers;
 
 		m_beams.push_back(SpaceShipBeam(m_pos,m_fAngle,300.0f));
 		tree.Insert(m_beams.back());
-	}
+	}*/
 
 	m_pos.z += 50.0f*input.MouseZ();
 

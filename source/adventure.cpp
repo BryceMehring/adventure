@@ -12,7 +12,13 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/random.hpp>
 
-extern "C" IPlugin* CreatePlugin()
+#ifdef _WIN32
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
+#endif
+
+extern "C" EXPORT IPlugin* CreatePlugin()
 {
 	return new adventure();
 }
@@ -48,6 +54,8 @@ void adventure::Init(Game& game)
 	}
 
 	game.GetRenderer().SetClearColor(glm::vec3(0.05,0.05,0.1));
+
+	game.GetRenderer().EnableVSync(false);
 }
 
 // Called only once when the plugin is destroyed
@@ -91,7 +99,7 @@ void adventure::Draw(Game& game)
 	m_spaceShip.Render(renderer);
 
 	std::stringstream stream;
-	stream << game.GetDt();
+	stream << game.GetFps();
 
 	renderer.SetRenderSpace(RenderSpace::Screen);
 	renderer.DrawString(stream.str().c_str(),glm::vec3(50,200,-5.0f),glm::vec2(40.0f));
