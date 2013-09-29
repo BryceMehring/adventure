@@ -4,7 +4,7 @@
 
 //#include <GLFW/glfw3.h>
 
-UserControlledSpaceShip::UserControlledSpaceShip() : SpaceShip(3,glm::vec3(0.0f,0.0f,-50.0f))
+UserControlledSpaceShip::UserControlledSpaceShip() : SpaceShip("ship",3,glm::vec3(0.0f,0.0f,-50.0f))
 {
 }
 

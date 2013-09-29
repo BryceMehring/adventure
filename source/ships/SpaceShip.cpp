@@ -5,7 +5,7 @@
 #include <sstream>
 
 
-SpaceShip::SpaceShip(unsigned int tile, const glm::vec3& pos) : m_pos(pos), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),20.0f)),
+SpaceShip::SpaceShip(const std::string& str, unsigned int tile, const glm::vec3& pos) : m_sprite(str), m_pos(pos), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),20.0f)),
 	m_tile(tile), m_fAngle(0.0f), m_fSpeed(50.0f), m_bVisable(false), m_bDrawLazers(true), m_bCollison(false)
 {
 }
@@ -51,7 +51,7 @@ void SpaceShip::Render(IRenderer& renderer)
 
 		glm::vec3 color = m_bCollison ? glm::vec3(0.9f,0.3f,0.3f) : glm::vec3(1.0f);
 
-		renderer.DrawSprite("ship",glm::scale(T,50.0f,50.0f,1.0f),color,glm::vec2(1.0f),m_tile);
+		renderer.DrawSprite(m_sprite,glm::scale(T,50.0f,50.0f,1.0f),color,glm::vec2(1.0f),m_tile);
 
 		if(m_bDrawLazers)
 		{

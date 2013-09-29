@@ -46,7 +46,7 @@ set(adventure_SOURCE
 
 
 add_library(adventure MODULE ${adventure_HEADERS} ${adventure_SOURCE})
-target_link_libraries(adventure ${CMAKE_SOURCE_DIR}/../GameEngine/bin/libcommon.so ${CMAKE_SOURCE_DIR}/../GameEngine/bin/libQuadTree.a ${GAME_ENGINE_LIBRARY_DEBUG} )
+target_link_libraries(adventure ${CMAKE_SOURCE_DIR}/../GameEngine/bin/common.lib ${CMAKE_SOURCE_DIR}/../GameEngine/bin/QuadTree.lib ${GAME_ENGINE_LIBRARY} )
 
 #include_directories(${CMAKE_SOURCE_DIR}/source)
 

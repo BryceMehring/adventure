@@ -9,7 +9,7 @@ class SpaceShip : public ISpatialObject, public IDestroyable
 {
 public:
 
-	SpaceShip(unsigned int tile, const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
+	SpaceShip(const std::string& str, unsigned int tile, const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
 
 	virtual const glm::vec3& GetPos() const { return m_pos; }
 	virtual glm::vec2 GetDir() const { return glm::vec2(0.0f); }
@@ -30,6 +30,7 @@ public:
 
 protected:
 
+	std::string m_sprite;
 	glm::vec3 m_pos;
 	Math::CCircle m_collisonPolygon;
 	unsigned int m_tile;

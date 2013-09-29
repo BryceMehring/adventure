@@ -43,17 +43,27 @@ void adventure::Init(Game& game)
 	m_pCamera->AddRef();
 	game.GetRenderer().SetCamera(m_pCamera);
 
-	m_enemies.reserve(5);
+	m_enemies.reserve(500);
 	for(unsigned int i = 0; i < 500; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
-		m_enemies.push_back(std::auto_ptr<SpaceShip>(new AISpaceShip(shipTile,pos)));
+		m_enemies.push_back(std::auto_ptr<SpaceShip>(new AISpaceShip("ship",shipTile,pos)));
 
 		this->m_quadTree.Insert(*m_enemies.back());
 	}
 
-	game.GetRenderer().SetClearColor(glm::vec3(0.05,0.05,0.1));
+	//Squid
+	for(unsigned int i = 0; i < 10; ++i)
+	{
+		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
+		unsigned int shipTile = 3;
+		m_enemies.push_back(std::auto_ptr<SpaceShip>(new SquidSpaceShip("squid",shipTile,pos)));
+
+		this->m_quadTree.Insert(*m_enemies.back());
+	}
+
+	game.GetRenderer().SetClearColor(glm::vec3(0.01,0.01,0.1));
 
 	game.GetRenderer().EnableVSync(false);
 }
@@ -82,6 +92,8 @@ void adventure::Draw(Game& game)
 	renderer.SetRenderSpace(RenderSpace::World);
 
 	int zPos = -800;
+
+	//Draws X (10) layers of stars
 	for(int i = 0; i < 10; ++i)
 	{
 		glm::mat4 T = glm::translate(0.0f,0.0f,(float)zPos);
@@ -91,6 +103,7 @@ void adventure::Draw(Game& game)
 		zPos += 50;
 	}
 
+	//Loops over all enemies
 	for(auto iter = this->m_enemies.begin(); iter != m_enemies.end(); ++iter)
 	{
 		(*iter)->Render(renderer);
