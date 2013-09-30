@@ -15,10 +15,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../GameEngine/CM
 include("${CMAKE_SOURCE_DIR}/../GameEngine/CMake/CompileFlags.cmake")
 
 find_package(GAME_ENGINE)
-include_directories(${GAME_ENGINE_INCLUDE_DIR})
-include_directories(${GAME_ENGINE_INCLUDE_DIR}/interfaces)
-include_directories(${GAME_ENGINE_INCLUDE_DIR}/../common)
-include_directories(${GAME_ENGINE_INCLUDE_DIR}/../QuadTree)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/GameEngine)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/GameEngine/interfaces)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/common)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/QuadTree)
 
 find_package(GLM)
 include_directories(${GLM_INCLUDE_DIR})
@@ -26,9 +26,6 @@ include_directories(${GLM_INCLUDE_DIR})
 find_package (ANGELSCRIPT)
 include_directories(${ANGELSCRIPT_INCLUDE_DIR})
 include_directories(${ANGELSCRIPT_ADDON_INCLUDE_DIR})
-
-find_library(COMMON_LIB common ${CMAKE_SOURCE_DIR}/../GameEngine/bin)
-find_library(QUADTREE_LIB QuadTree ${CMAKE_SOURCE_DIR}/../GameEngine/bin)
 
 set(adventure_HEADERS
 	source/adventure.h
@@ -49,7 +46,7 @@ set(adventure_SOURCE
 
 
 add_library(adventure MODULE ${adventure_HEADERS} ${adventure_SOURCE})
-target_link_libraries(adventure ${COMMON_LIB} ${QUADTREE_LIB} ${GAME_ENGINE_LIBRARY})
+target_link_libraries(adventure ${GAME_ENGINE_QUADTREE_LIB} ${GAME_ENGINE_COMMON_LIB} ${GAME_ENGINE_LIB})
 
 #include_directories(${CMAKE_SOURCE_DIR}/source)
 
