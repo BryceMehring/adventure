@@ -3,6 +3,7 @@ bin/
 
 # windows
 *.exe
+*.db
 
 # Compiled Object files
 *.slo
@@ -28,9 +29,11 @@ bin/
 *.list
 *.check_cache
 *.ilk
+*.cbp
 CMakeCache.txt
 cmake_install.cmake
 CMakeFiles/
+Makefile
 
 #visual studio
 *.vcxproj
@@ -48,6 +51,7 @@ CMakeFiles/
 *.sdf
 *.pdb
 *.cxx
+*.exp
 
 
 #other
