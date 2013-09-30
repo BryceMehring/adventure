@@ -27,6 +27,9 @@ find_package (ANGELSCRIPT)
 include_directories(${ANGELSCRIPT_INCLUDE_DIR})
 include_directories(${ANGELSCRIPT_ADDON_INCLUDE_DIR})
 
+find_library(COMMON_LIB common ${CMAKE_SOURCE_DIR}/../GameEngine/bin)
+find_library(QUADTREE_LIB QuadTree ${CMAKE_SOURCE_DIR}/../GameEngine/bin)
+
 set(adventure_HEADERS
 	source/adventure.h
 	source/IDestroyable.h
@@ -46,7 +49,7 @@ set(adventure_SOURCE
 
 
 add_library(adventure MODULE ${adventure_HEADERS} ${adventure_SOURCE})
-target_link_libraries(adventure ${CMAKE_SOURCE_DIR}/../GameEngine/bin/common.lib ${CMAKE_SOURCE_DIR}/../GameEngine/bin/QuadTree.lib ${GAME_ENGINE_LIBRARY} )
+target_link_libraries(adventure ${COMMON_LIB} ${QUADTREE_LIB} ${GAME_ENGINE_LIBRARY})
 
 #include_directories(${CMAKE_SOURCE_DIR}/source)
 
