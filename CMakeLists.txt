@@ -27,6 +27,8 @@ find_package (ANGELSCRIPT)
 include_directories(${ANGELSCRIPT_INCLUDE_DIR})
 include_directories(${ANGELSCRIPT_ADDON_INCLUDE_DIR})
 
+set(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/plugin/adventure)
+
 add_subdirectory(${CMAKE_SOURCE_DIR}/source)
 
 #include_directories(${CMAKE_SOURCE_DIR}/source)

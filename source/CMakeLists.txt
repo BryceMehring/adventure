@@ -19,3 +19,7 @@ set(adventure_SOURCE
 add_library(adventure MODULE ${adventure_HEADERS} ${adventure_SOURCE})
 target_link_libraries(adventure ${GAME_ENGINE_QUADTREE_LIB} ${GAME_ENGINE_COMMON_LIB} ${GAME_ENGINE_LIB})
 
+set_target_properties(adventure PROPERTIES PREFIX "")
+set_target_properties(adventure PROPERTIES SUFFIX ".plug")
+
+
