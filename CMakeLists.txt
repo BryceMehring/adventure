@@ -13,6 +13,9 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../GameEngine/CMake/Modules")
 include("${CMAKE_SOURCE_DIR}/../GameEngine/CMake/CompileFlags.cmake")
+include("${CMAKE_SOURCE_DIR}/../GameEngine/CMake/RedirectOutputTo.cmake")
+
+RedirectOutputToBin("plugin/adventure")
 
 find_package(GAME_ENGINE)
 include_directories(${GAME_ENGINE_INCLUDE_DIR}/GameEngine)
@@ -23,11 +26,11 @@ include_directories(${GAME_ENGINE_INCLUDE_DIR}/QuadTree)
 find_package(GLM)
 include_directories(${GLM_INCLUDE_DIR})
 
-find_package (ANGELSCRIPT)
+find_package(ANGELSCRIPT)
 include_directories(${ANGELSCRIPT_INCLUDE_DIR})
 include_directories(${ANGELSCRIPT_ADDON_INCLUDE_DIR})
 
-set(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/plugin/adventure)
+#set(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/plugin/adventure)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/source)
 
