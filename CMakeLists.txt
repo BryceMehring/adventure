@@ -15,7 +15,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../GameEngine/CM
 include("${CMAKE_SOURCE_DIR}/../GameEngine/CMake/CompileFlags.cmake")
 include("${CMAKE_SOURCE_DIR}/../GameEngine/CMake/RedirectOutputTo.cmake")
 
-RedirectOutputToBin("plugin/adventure")
+RedirectOutputTo("plugin/adventure")
 
 find_package(GAME_ENGINE)
 include_directories(${GAME_ENGINE_INCLUDE_DIR}/GameEngine)
