@@ -47,9 +47,6 @@ bool UserControlledSpaceShip::Update(float dt, Camera* pCam, IKMInput& input, Qu
 
 	m_pos.z += 50.0f*input.MouseZ();
 
-	pCam->lookAt(glm::vec3(m_pos.x,m_pos.y,-m_pos.z),glm::vec3(m_pos.x,m_pos.y,0.0f),glm::vec3(0,1,0));
-	pCam->update();
-
 	std::vector<ISpatialObject*> nearObjects;
 	tree.QueryNearObjects(this,nearObjects);
 
@@ -75,7 +72,12 @@ bool UserControlledSpaceShip::Update(float dt, Camera* pCam, IKMInput& input, Qu
 		}
 	}
 
-	return SpaceShip::Update(dt,pCam,tree);
+	bool success = SpaceShip::Update(dt,pCam,tree);
+
+	pCam->lookAt(glm::vec3(m_pos.x,m_pos.y,-m_pos.z),glm::vec3(m_pos.x,m_pos.y,0.0f),glm::vec3(0,1,0));
+	pCam->update();
+
+	return success;
 
 }
 
