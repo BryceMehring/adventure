@@ -1,6 +1,9 @@
 #output dir
 bin/
 
+#Game Engine shared libs
+*.plug
+
 # windows
 *.exe
 *.db

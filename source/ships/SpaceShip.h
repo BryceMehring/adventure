@@ -5,6 +5,8 @@
 #include "QuadTree.h"
 #include "../IDestroyable.h"
 
+#include <string>
+
 class SpaceShip : public ISpatialObject, public IDestroyable
 {
 public:
