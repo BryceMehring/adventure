@@ -15,24 +15,24 @@ UserControlledSpaceShip::~UserControlledSpaceShip()
 
 bool UserControlledSpaceShip::Update(float dt, Camera* pCam, IKMInput& input, QuadTree& tree)
 {
-	if(input.KeyDown('W',false))
+	if(input.KeyPress('W',false))
 	{
 		m_fSpeed += 100.0f * dt;
 	}
-	if(input.KeyDown('A',false))
+	if(input.KeyPress('A',false))
 	{
 		m_fAngle += 200.0f * dt;
 	}
-	if(input.KeyDown('S',false))
+	if(input.KeyPress('S',false))
 	{
 		m_fSpeed -= 100.0f * dt;
 	}
-	if(input.KeyDown('D',false))
+	if(input.KeyPress('D',false))
 	{
 		m_fAngle -= 200.0f * dt;
 	}
 
-	if(input.KeyDown(265))
+	if(input.KeyPress(265))
 	{
 		m_tile = (m_tile + 1) % 5;
 	}
