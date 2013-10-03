@@ -26,6 +26,7 @@ private:
 	double m_spriteAnimationTime;
 	int m_frame;
 	int m_direction;
+	int m_direction_time;
 };
 
 #endif // _AISPACESHIP_

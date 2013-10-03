@@ -29,12 +29,13 @@ SquidSpaceShip::SquidSpaceShip(const std::string& str, unsigned int tile,const g
 	m_spriteAnimationTime = 0;
 	m_frame = 0;
 	m_fAngle = 0;
+	m_direction_time = 5 + rand()%10;
 }
 
 bool SquidSpaceShip::Update(float dt, Camera* pCamera, QuadTree& tree)
 {
 	m_dt += dt;
-	if(m_dt >= 5)
+	if(m_dt >= m_direction_time)
 	{
 		m_direction = (m_direction + 1) % 4;
 		m_dt = 0;

@@ -44,7 +44,7 @@ void adventure::Init(Game& game)
 	game.GetRenderer().SetCamera(m_pCamera);
 
 	m_enemies.reserve(500);
-	for(unsigned int i = 0; i < 500; ++i)
+	for(unsigned int i = 0; i < 10; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
@@ -54,7 +54,7 @@ void adventure::Init(Game& game)
 	}
 
 	//Squid
-	for(unsigned int i = 0; i < 10; ++i)
+	for(unsigned int i = 0; i < 300; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = 3;
