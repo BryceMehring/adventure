@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "QuadTree.h"
 #include "ships/UserControlledSpaceShip.h"
+#include "GUI.h"
+#include "ProgressBar.h"
 
 #include <vector>
 #include <memory>
@@ -45,6 +47,11 @@ private:
 	std::vector<std::auto_ptr<SpaceShip>> m_enemies;
 	Camera* m_pCamera;
 	QuadTree m_quadTree;
+	UI::GUI m_gui;
+	UI::ProgressBar* m_pProgressBar;
+
+	void BuildGUI();
+
 };
 
 #endif // _ADVENTURE_

@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "Camera.h"
 #include "Log.h"
+#include "ProgressBar.h"
 
 #include "ships/AISpaceShip.h"
 
@@ -11,6 +12,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/random.hpp>
+
+#include <functional>
+
+#include <GLFW/glfw3.h>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -23,8 +28,28 @@ extern "C" EXPORT IPlugin* CreatePlugin()
 	return new adventure();
 }
 
-adventure::adventure() : m_quadTree(Math::FRECT(glm::vec2(-8000,8000),glm::vec2(8000,-8000)))
+adventure::adventure() : m_quadTree(Math::FRECT(glm::vec2(-8000,8000),glm::vec2(8000,-8000)),64)
 {
+
+}
+
+static void callback()
+{
+}
+
+
+void adventure::BuildGUI()
+{
+	UI::Menu* pMenu = new UI::Menu();
+
+	//std::bind()
+	UI::ProgressBar* pProgressBar = new UI::ProgressBar(glm::vec2(-500,500),glm::vec2(500,500),callback);
+	pMenu->AddElement(pProgressBar);
+
+	pProgressBar->AddRef();
+	m_pProgressBar = pProgressBar;
+
+	m_gui.SetMenu(pMenu);
 
 }
 
@@ -44,7 +69,7 @@ void adventure::Init(Game& game)
 	game.GetRenderer().SetCamera(m_pCamera);
 
 	m_enemies.reserve(500);
-	for(unsigned int i = 0; i < 10; ++i)
+	for(unsigned int i = 0; i < 200; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
@@ -54,7 +79,7 @@ void adventure::Init(Game& game)
 	}
 
 	//Squid
-	for(unsigned int i = 0; i < 300; ++i)
+	for(unsigned int i = 0; i < 200; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = 3;
@@ -66,11 +91,14 @@ void adventure::Init(Game& game)
 	game.GetRenderer().SetClearColor(glm::vec3(0.01,0.01,0.1));
 
 	game.GetRenderer().EnableVSync(false);
+
+	BuildGUI();
 }
 
 // Called only once when the plugin is destroyed
 void adventure::Destroy(Game& game)
 {
+	m_pProgressBar->Release();
 	ReleaseCamera(m_pCamera);
 }
 
@@ -79,9 +107,34 @@ void adventure::Update(Game& game)
 {
 	m_spaceShip.Update(game.GetDt(),m_pCamera,game.GetInput(),m_quadTree);
 
-	for(auto iter = this->m_enemies.begin(); iter != m_enemies.end(); ++iter)
+	for(auto iter = this->m_enemies.begin(); iter != m_enemies.end(); )
 	{
-		(*iter)->Update(game.GetDt(),m_pCamera,m_quadTree);
+		if((*iter)->Update(game.GetDt(),m_pCamera,m_quadTree))
+		{
+			m_quadTree.Erase(**iter);
+			m_enemies.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
+
+	m_gui.Update(game.GetInput(),game.GetDt());
+
+	static float progress = 0.0f;
+
+	if(game.GetInput().KeyPress(GLFW_KEY_RIGHT,false))
+	{
+		progress += game.GetDt() * 0.1f;
+
+		m_pProgressBar->SetProgress(progress);
+	}
+	else if(game.GetInput().KeyPress(GLFW_KEY_LEFT,false))
+	{
+		progress -= game.GetDt() * 0.1f;
+
+		m_pProgressBar->SetProgress(progress);
 	}
 }
 
@@ -111,13 +164,17 @@ void adventure::Draw(Game& game)
 
 	m_spaceShip.Render(renderer);
 
+	this->m_quadTree.Render(renderer);
+
 	std::stringstream stream;
 	stream << game.GetFps();
 
 	renderer.SetRenderSpace(RenderSpace::Screen);
-	renderer.DrawString(stream.str().c_str(),glm::vec3(50,200,-5.0f),glm::vec2(40.0f));
+	renderer.DrawString(stream.str().c_str(),glm::vec3(-850.0f,500.0f,-5.0f),glm::vec2(40.0f));
 
-	//this->m_quadTree.Render(renderer);
+	m_gui.Render(renderer);
+
+
 
 }
 

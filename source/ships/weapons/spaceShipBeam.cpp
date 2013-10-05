@@ -4,7 +4,7 @@
 #include <glm/gtx/transform.hpp>
 
 SpaceShipBeam::SpaceShipBeam(const glm::vec3& pos, float dir, float speed) :
-m_pos(pos), m_dir(dir), m_speed(speed), m_age(0), m_collisionPoly(Math::Circle(glm::vec2(pos.x,pos.y),15.0f)), m_bDestroyed(false)
+	m_pos(pos), m_dir(dir), m_speed(speed), m_age(0), m_collisionPoly(Math::Circle(glm::vec2(pos.x,pos.y),7.0f)), m_bDestroyed(false), m_frame(0)
 {
 }
 
@@ -50,7 +50,12 @@ bool SpaceShipBeam::Update(float dt, QuadTree& tree)
 	m_pos += dir * m_speed * dt;
 	m_age += dt;
 
-	/*tree.Erase(*this);
+	if((m_age - floor(m_age)) > (1.0f/30.0f))
+	{
+		m_frame = (m_frame + 1) % 2;
+	}
+
+	tree.Erase(*this);
 	m_collisionPoly.GetCircle().center = glm::vec2(m_pos.x,m_pos.y);
 	tree.Insert(*this);
 
@@ -60,14 +65,15 @@ bool SpaceShipBeam::Update(float dt, QuadTree& tree)
 	for(unsigned int i = 0; i < nearObj.size(); ++i)
 	{
 		void* pInterface = nearObj[i]->QueryInterface(IDestroyable::INTERFACE_DESTROY);
-		void* pShipInterface = nearObj[i]->QueryInterface(SpaceShip::INTERFACE_SPACESHIP);
+		void* pBeam = nearObj[i]->QueryInterface(SpaceShipBeam::INTERFACE_BEAM);
 
-		if(pInterface != nullptr && pShipInterface == nullptr)
+		if(pInterface != nullptr && pBeam == nullptr)
 		{
 			IDestroyable* pDestroyable = static_cast<IDestroyable*>(pInterface);
 			pDestroyable->Destroy();
+			m_bDestroyed = true;
 		}
-	}*/
+	}
 
 	return m_bDestroyed || m_age > 2.7f;
 }
@@ -78,5 +84,5 @@ void SpaceShipBeam::Render(IRenderer& renderer)
 
 	glm::mat4 T = glm::translate(m_pos.x,m_pos.y,-100.0f);
 
-	renderer.DrawSprite("beam",glm::scale(T,r,r,1.0f));
+	renderer.DrawSprite("weapon",glm::scale(T,r,r,1.0f),glm::vec3(1.0f),glm::vec2(1.0f),m_frame);
 }

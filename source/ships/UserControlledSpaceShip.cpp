@@ -2,7 +2,7 @@
 #include "IKMInput.h"
 #include "Camera.h"
 
-//#include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h>
 
 UserControlledSpaceShip::UserControlledSpaceShip() : SpaceShip("ship",3,glm::vec3(0.0f,0.0f,-50.0f))
 {
@@ -37,25 +37,25 @@ bool UserControlledSpaceShip::Update(float dt, Camera* pCam, IKMInput& input, Qu
 		m_tile = (m_tile + 1) % 5;
 	}
 
-	/*if(input.KeyDown(GLFW_KEY_SPACE,false))
+	if(input.KeyPress(GLFW_KEY_SPACE))
 	{
 		//m_bDrawLazers = !m_bDrawLazers;
 
-		m_beams.push_back(SpaceShipBeam(m_pos,m_fAngle,300.0f));
+		m_beams.push_back(SpaceShipBeam(m_pos + 30.0f*glm::vec3(-sin(m_fAngle * 3.14f / 180.0f),cos(m_fAngle * 3.14f / 180.0f),0.0f),m_fAngle,200.0f));
 		tree.Insert(m_beams.back());
-	}*/
+	}
 
-	m_pos.z += 50.0f*input.MouseZ();
+	m_pos.z += 0.3f*input.MouseY();
 
 	std::vector<ISpatialObject*> nearObjects;
 	tree.QueryNearObjects(this,nearObjects);
 
 	m_bCollison = !nearObjects.empty();
 
-	for(unsigned int i = 0; i < nearObjects.size(); ++i)
+	/*for(unsigned int i = 0; i < nearObjects.size(); ++i)
 	{
 		//nearObjects[i]->
-	}
+	}*/
 
 	for(auto iter = m_beams.begin(); iter != m_beams.end(); )
 	{
@@ -87,10 +87,6 @@ void UserControlledSpaceShip::Render(IRenderer& renderer)
 	{
 		iter.Render(renderer);
 	}
-	/*for(unsigned int i = 0;	i < m_beams.size(); ++i)
-	{
-		m_beams[i].Render(renderer);
-	}*/
 
 	SpaceShip::Render(renderer);
 }

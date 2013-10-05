@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include "QuadTree.h"
 #include "../IDestroyable.h"
+#include "GUI.h"
+#include "ProgressBar.h"
 
 #include <string>
 
@@ -12,6 +14,7 @@ class SpaceShip : public ISpatialObject, public IDestroyable
 public:
 
 	SpaceShip(const std::string& str, unsigned int tile, const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
+	~SpaceShip();
 
 	virtual const glm::vec3& GetPos() const { return m_pos; }
 	virtual glm::vec2 GetDir() const { return glm::vec2(0.0f); }
@@ -25,8 +28,7 @@ public:
 	virtual bool Update(float dt, class Camera*, QuadTree& tree);
 	virtual void Render(class IRenderer&);
 
-	// todo: implement
-	virtual void Destroy() {}
+	virtual void Destroy();
 
 	static const unsigned int INTERFACE_SPACESHIP = 4272475246;
 
@@ -41,6 +43,10 @@ protected:
 	bool m_bVisable;
 	bool m_bDrawLazers;
 	bool m_bCollison;
+	int m_iHealth;
+	UI::GUI m_gui;
+	UI::ProgressBar* m_pProgressBar;
+
 };
 
 

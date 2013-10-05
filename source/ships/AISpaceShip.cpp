@@ -4,6 +4,8 @@
 
 #include "IRenderer.h"
 
+void callback() {}
+
 AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, const glm::vec3& pos) : SpaceShip(str,tile,pos), m_fTime(0.0f)
 {
 	m_fSpeed = glm::linearRand(10.0f,100.0f);
@@ -12,8 +14,6 @@ AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, const glm::v
 
 bool AISpaceShip::Update(float dt, Camera* pCam, QuadTree& tree)
 {
-	
-
 	std::vector<ISpatialObject*> nearObjects;
 	tree.QueryNearObjects(this,nearObjects);
 

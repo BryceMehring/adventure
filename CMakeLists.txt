@@ -22,6 +22,7 @@ include_directories(${GAME_ENGINE_INCLUDE_DIR}/GameEngine)
 include_directories(${GAME_ENGINE_INCLUDE_DIR}/GameEngine/interfaces)
 include_directories(${GAME_ENGINE_INCLUDE_DIR}/common)
 include_directories(${GAME_ENGINE_INCLUDE_DIR}/QuadTree)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/GUI)
 
 find_package(GLM)
 include_directories(${GLM_INCLUDE_DIR})
@@ -30,9 +31,6 @@ find_package(ANGELSCRIPT)
 include_directories(${ANGELSCRIPT_INCLUDE_DIR})
 include_directories(${ANGELSCRIPT_ADDON_INCLUDE_DIR})
 
-#set(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/plugin/adventure)
-
 add_subdirectory(${CMAKE_SOURCE_DIR}/source)
 
-#include_directories(${CMAKE_SOURCE_DIR}/source)
 

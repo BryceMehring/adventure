@@ -35,6 +35,7 @@ private:
 	float m_speed;
 	float m_dir;
 	float m_age;
+	int m_frame;
 	bool m_bDestroyed;
 
 };
