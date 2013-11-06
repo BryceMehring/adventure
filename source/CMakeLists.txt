@@ -2,6 +2,7 @@
 set(adventure_HEADERS
 	adventure.h
 	IDestroyable.h
+    SpriteAnimation.h
 	ships/AISpaceShip.h
 	ships/UserControlledSpaceShip.h
 	ships/SpaceShip.h
@@ -10,6 +11,7 @@ set(adventure_HEADERS
 
 set(adventure_SOURCE
 	adventure.cpp
+    SpriteAnimation.cpp
 	ships/AISpaceShip.cpp
 	ships/UserControlledSpaceShip.cpp
 	ships/SpaceShip.cpp

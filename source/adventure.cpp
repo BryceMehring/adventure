@@ -28,19 +28,18 @@ extern "C" EXPORT IPlugin* CreatePlugin()
 	return new adventure();
 }
 
-adventure::adventure() : m_quadTree(Math::FRECT(glm::vec2(-8000,8000),glm::vec2(8000,-8000)),64)
+adventure::adventure() : m_quadTree(Math::FRECT(glm::vec2(-10000,10000),glm::vec2(10000,-10000)),32), m_bRenderQuadTree(false)
 {
-
 }
-
-static void callback()
+adventure::~adventure()
 {
+	//m_pProgressBar->Release();
 }
 
 
 void adventure::BuildGUI()
 {
-	UI::Menu* pMenu = new UI::Menu();
+	/*UI::Menu* pMenu = new UI::Menu();
 
 	//std::bind()
 	UI::ProgressBar* pProgressBar = new UI::ProgressBar(glm::vec2(-500,500),glm::vec2(500,500),callback);
@@ -49,41 +48,40 @@ void adventure::BuildGUI()
 	pProgressBar->AddRef();
 	m_pProgressBar = pProgressBar;
 
-	m_gui.SetMenu(pMenu);
+	m_gui.SetMenu(pMenu);*/
 
 }
 
 // Called only once when the plugin is created
 void adventure::Init(Game& game)
 {
-	m_pCamera = CreateCamera();
-
 	int m, i, width, height;
 	game.GetRenderer().GetCurrentDisplayMode(m, i);
 	game.GetRenderer().GetDisplayMode(m,i,width,height);
-	m_pCamera->setLens(90.0f,width,height,1.0f,5000.0f);
-	m_pCamera->lookAt(glm::vec3(0.0f,0.0f,100.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
-	m_pCamera->update();
+	m_camera.setLens(90.0f,width,height,1.0f,5000.0f);
+	m_camera.lookAt(glm::vec3(0.0f,0.0f,100.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+	m_camera.update();
 
-	m_pCamera->AddRef();
-	game.GetRenderer().SetCamera(m_pCamera);
+	game.GetRenderer().SetCamera(&m_camera);
 
 	m_enemies.reserve(500);
-	for(unsigned int i = 0; i < 200; ++i)
+
+	// ships
+	for(unsigned int i = 0; i < 2000; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
-		m_enemies.push_back(std::auto_ptr<SpaceShip>(new AISpaceShip("ship",shipTile,pos)));
+		m_enemies.push_back(std::auto_ptr<SpaceShip>(new AISpaceShip("ship",shipTile,20.0f,pos)));
 
 		this->m_quadTree.Insert(*m_enemies.back());
 	}
 
 	//Squid
-	for(unsigned int i = 0; i < 200; ++i)
+	for(unsigned int i = 0; i < 500; ++i)
 	{
-		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
+		glm::vec3 pos = glm::vec3(glm::diskRand(7000.0f),-100.0f);
 		unsigned int shipTile = 3;
-		m_enemies.push_back(std::auto_ptr<SpaceShip>(new SquidSpaceShip("squid",shipTile,pos)));
+		m_enemies.push_back(std::auto_ptr<SpaceShip>(new SquidSpaceShip("squid",shipTile,20.0f,pos)));
 
 		this->m_quadTree.Insert(*m_enemies.back());
 	}
@@ -98,19 +96,20 @@ void adventure::Init(Game& game)
 // Called only once when the plugin is destroyed
 void adventure::Destroy(Game& game)
 {
-	m_pProgressBar->Release();
-	ReleaseCamera(m_pCamera);
+	game.GetRenderer().SetCamera(nullptr);
 }
 
 // Called every frame to update the state of the game
 void adventure::Update(Game& game)
 {
-	m_spaceShip.Update(game.GetDt(),m_pCamera,game.GetInput(),m_quadTree);
+	m_spaceShip.Update(game.GetDt(),m_camera,game.GetInput(),m_quadTree);
 
 	for(auto iter = this->m_enemies.begin(); iter != m_enemies.end(); )
 	{
-		if((*iter)->Update(game.GetDt(),m_pCamera,m_quadTree))
+		if((*iter)->Update(game.GetDt(),m_camera,m_quadTree))
 		{
+			m_deathAnimation.push_back(std::make_pair((*iter)->GetPos(),SpriteAnimation(90,30)));
+
 			m_quadTree.Erase(**iter);
 			m_enemies.erase(iter);
 		}
@@ -120,22 +119,24 @@ void adventure::Update(Game& game)
 		}
 	}
 
+	for(auto iter = m_deathAnimation.begin(); iter != m_deathAnimation.end(); )
+	{
+		if(iter->second.Update(game.GetDt()))
+		{
+			iter = m_deathAnimation.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
+
+	if(game.GetInput().KeyPress(GLFW_KEY_F1))
+	{
+		m_bRenderQuadTree = !m_bRenderQuadTree;
+	}
+
 	m_gui.Update(game.GetInput(),game.GetDt());
-
-	static float progress = 0.0f;
-
-	if(game.GetInput().KeyPress(GLFW_KEY_RIGHT,false))
-	{
-		progress += game.GetDt() * 0.1f;
-
-		m_pProgressBar->SetProgress(progress);
-	}
-	else if(game.GetInput().KeyPress(GLFW_KEY_LEFT,false))
-	{
-		progress -= game.GetDt() * 0.1f;
-
-		m_pProgressBar->SetProgress(progress);
-	}
 }
 
 // Called every frame to render the game
@@ -144,37 +145,56 @@ void adventure::Draw(Game& game)
 	IRenderer& renderer = game.GetRenderer();
 	renderer.SetRenderSpace(RenderSpace::World);
 
-	int zPos = -800;
+	int zPos = -400;
 
 	//Draws X (10) layers of stars
-	for(int i = 0; i < 10; ++i)
+	for(int i = 0; i < 4; ++i)
 	{
 		glm::mat4 T = glm::translate(0.0f,0.0f,(float)zPos);
 		T = glm::scale(T,8000.0f,8000.0f,1.0f);
-		renderer.DrawSprite("stars",T,glm::vec3(1.0f),glm::vec2(30.0f /(i + 1),30.0f / (i + 1))); // 15
+		renderer.DrawSprite("stars",T,glm::vec3(1.0f),glm::vec2(40.0f /(i + 1),40.0f / (i + 1))); // 15
 
-		zPos += 50;
+		zPos += 15;
 	}
 
 	//Loops over all enemies
-	for(auto iter = this->m_enemies.begin(); iter != m_enemies.end(); ++iter)
+	for(auto& iter : m_enemies)
 	{
-		(*iter)->Render(renderer);
+		iter->Render(renderer);
 	}
 
 	m_spaceShip.Render(renderer);
 
-	this->m_quadTree.Render(renderer);
+	for(auto& iter : m_deathAnimation)
+	{
+		glm::vec3 pos = iter.first;
+		glm::mat4 T = glm::translate(pos.x,pos.y,pos.z);
+		T = glm::scale(T,glm::vec3(200.0f,200.0f,1.0f));
 
-	std::stringstream stream;
-	stream << game.GetFps();
+		renderer.DrawSprite("explosion",T,glm::vec3(1),glm::vec2(1),iter.second.GetTile());
+	}
 
-	renderer.SetRenderSpace(RenderSpace::Screen);
-	renderer.DrawString(stream.str().c_str(),glm::vec3(-850.0f,500.0f,-5.0f),glm::vec2(40.0f));
+	if(m_bRenderQuadTree)
+	{
+		m_quadTree.Render(renderer);
+	}
 
-	m_gui.Render(renderer);
+	TextureInfo info;
+	//if(renderer.GetResourceManager().GetTextureInfo("ship",info))
+	{
 
+		std::stringstream stream;
+		stream << game.GetFps();
+		//stream  << info.pImg << std::endl;
+		//Log::Instance().Write(info.pImg[0]);
 
+		renderer.SetRenderSpace(RenderSpace::Screen);
+		renderer.DrawString(stream.str().c_str(),glm::vec3(-850.0f,500.0f,-5.0f),glm::vec2(40.0f));
+	}
+
+	//Log::Instance().Write(*info.pImg);
+
+	//m_gui.Render(renderer);
 
 }
 

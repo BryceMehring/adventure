@@ -7,9 +7,9 @@ class AISpaceShip : public SpaceShip
 {
 public:
 
-	AISpaceShip(const std::string& str, unsigned int tile,const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
+	AISpaceShip(const std::string& str, unsigned int tile, float s,const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
 
-	virtual bool Update(float dt, class Camera*, QuadTree& tree);
+	virtual bool Update(float dt, Camera& cam, QuadTree& tree);
 
 private:
 
@@ -19,14 +19,16 @@ private:
 class SquidSpaceShip : public AISpaceShip
 {
 public:
-	SquidSpaceShip(const std::string& str, unsigned int tile,const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
-	virtual bool Update(float dt, class Camera*, QuadTree& tree);
+	SquidSpaceShip(const std::string& str, unsigned int tile, float s,const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
+	virtual bool Update(float dt, Camera& cam, QuadTree& tree);
 private:
 	double m_dt;
 	double m_spriteAnimationTime;
 	int m_frame;
 	int m_direction;
 	int m_direction_time;
+
+
 };
 
 #endif // _AISPACESHIP_

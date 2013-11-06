@@ -3,6 +3,7 @@
 
 #include "QuadTree.h"
 #include "../../IDestroyable.h"
+#include "../../SpriteAnimation.h"
 #include <glm/glm.hpp>
 
 class SpaceShipBeam : public ISpatialObject, public IDestroyable
@@ -32,10 +33,10 @@ private:
 
 	glm::vec3 m_pos;
 	Math::CCircle m_collisionPoly;
+	SpriteAnimation m_animation;
 	float m_speed;
 	float m_dir;
 	float m_age;
-	int m_frame;
 	bool m_bDestroyed;
 
 };

@@ -6,23 +6,23 @@
 
 void callback() {}
 
-AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, const glm::vec3& pos) : SpaceShip(str,tile,pos), m_fTime(0.0f)
+AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : SpaceShip(str,tile,s,pos), m_fTime(0.0f)
 {
 	m_fSpeed = glm::linearRand(10.0f,100.0f);
 	m_fAngle = glm::linearRand(0.0f,360.0f);
 }
 
-bool AISpaceShip::Update(float dt, Camera* pCam, QuadTree& tree)
+bool AISpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 {
 	std::vector<ISpatialObject*> nearObjects;
 	tree.QueryNearObjects(this,nearObjects);
 
 	m_bCollison = !nearObjects.empty();
 
-	return SpaceShip::Update(dt,pCam,tree);
+	return SpaceShip::Update(dt,cam,tree);
 }
 
-SquidSpaceShip::SquidSpaceShip(const std::string& str, unsigned int tile,const glm::vec3& pos) : AISpaceShip(str,tile,pos)
+SquidSpaceShip::SquidSpaceShip(const std::string& str, unsigned int tile, float s,const glm::vec3& pos) : AISpaceShip(str,tile, s,pos)
 {
 	m_dt = 0;
 	m_direction = 0;
@@ -32,7 +32,7 @@ SquidSpaceShip::SquidSpaceShip(const std::string& str, unsigned int tile,const g
 	m_direction_time = 5 + rand()%10;
 }
 
-bool SquidSpaceShip::Update(float dt, Camera* pCamera, QuadTree& tree)
+bool SquidSpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 {
 	m_dt += dt;
 	if(m_dt >= m_direction_time)
@@ -54,5 +54,5 @@ bool SquidSpaceShip::Update(float dt, Camera* pCamera, QuadTree& tree)
 	const glm::vec3 direction_array[4] = {glm::vec3(0,-1,0),glm::vec3(-1,0,0),glm::vec3(1,0,0),glm::vec3(0,1,0)};
 	m_pos += 50.0f*direction_array[m_direction] * dt;
 
-	return AISpaceShip::Update(dt,pCamera,tree);
+	return AISpaceShip::Update(dt,cam,tree);
 }

@@ -9,6 +9,7 @@
 #include "ProgressBar.h"
 
 #include <vector>
+#include <deque>
 #include <memory>
 
 class adventure : public IGameState
@@ -16,6 +17,7 @@ class adventure : public IGameState
 public:
 
 	adventure();
+	~adventure();
 
 	// returns the type of the plug-in
 	virtual DLLType GetPluginType() const { return DLLType::Game; }
@@ -45,10 +47,14 @@ private:
 
 	UserControlledSpaceShip m_spaceShip;
 	std::vector<std::auto_ptr<SpaceShip>> m_enemies;
-	Camera* m_pCamera;
+	std::deque<std::pair<glm::vec3,SpriteAnimation>> m_deathAnimation;
+	Camera m_camera;
 	QuadTree m_quadTree;
 	UI::GUI m_gui;
 	UI::ProgressBar* m_pProgressBar;
+	bool m_bRenderQuadTree;
+
+	unsigned int creatureCount;
 
 	void BuildGUI();
 

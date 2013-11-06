@@ -4,7 +4,7 @@
 #include <glm/gtx/transform.hpp>
 
 SpaceShipBeam::SpaceShipBeam(const glm::vec3& pos, float dir, float speed) :
-	m_pos(pos), m_dir(dir), m_speed(speed), m_age(0), m_collisionPoly(Math::Circle(glm::vec2(pos.x,pos.y),7.0f)), m_bDestroyed(false), m_frame(0)
+	m_pos(pos), m_dir(dir), m_speed(speed), m_age(0), m_collisionPoly(Math::Circle(glm::vec2(pos.x,pos.y),7.0f)), m_bDestroyed(false), m_animation(2,40.0)
 {
 }
 
@@ -50,11 +50,6 @@ bool SpaceShipBeam::Update(float dt, QuadTree& tree)
 	m_pos += dir * m_speed * dt;
 	m_age += dt;
 
-	if((m_age - floor(m_age)) > (1.0f/30.0f))
-	{
-		m_frame = (m_frame + 1) % 2;
-	}
-
 	tree.Erase(*this);
 	m_collisionPoly.GetCircle().center = glm::vec2(m_pos.x,m_pos.y);
 	tree.Insert(*this);
@@ -75,14 +70,18 @@ bool SpaceShipBeam::Update(float dt, QuadTree& tree)
 		}
 	}
 
-	return m_bDestroyed || m_age > 2.7f;
+	m_animation.Update(dt);
+
+	return m_bDestroyed || m_age > 1.5f;
 }
 
 void SpaceShipBeam::Render(IRenderer& renderer)
 {
-	float r = m_collisionPoly.GetCircle().r;
+	float r = m_collisionPoly.GetCircle().r * 2.0f;
 
 	glm::mat4 T = glm::translate(m_pos.x,m_pos.y,-100.0f);
 
-	renderer.DrawSprite("weapon",glm::scale(T,r,r,1.0f),glm::vec3(1.0f),glm::vec2(1.0f),m_frame);
+	unsigned int tile = m_animation.GetTile();
+
+	renderer.DrawSprite("weapon",glm::scale(T,r,r,1.0f),glm::vec3(1.0f),glm::vec2(1.0f),tile);
 }
