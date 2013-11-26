@@ -24,6 +24,9 @@ include_directories(${GAME_ENGINE_INCLUDE_DIR}/common)
 include_directories(${GAME_ENGINE_INCLUDE_DIR}/QuadTree)
 include_directories(${GAME_ENGINE_INCLUDE_DIR}/GUI)
 
+find_package(GLFW)
+include_directories(${GLFW_INCLUDE_DIR})
+
 find_package(GLM)
 include_directories(${GLM_INCLUDE_DIR})
 
