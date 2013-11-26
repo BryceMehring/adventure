@@ -55,10 +55,10 @@ void adventure::BuildGUI()
 // Called only once when the plugin is created
 void adventure::Init(Game& game)
 {
-	int m, i, width, height;
-	game.GetRenderer().GetCurrentDisplayMode(m, i);
-	game.GetRenderer().GetDisplayMode(m,i,width,height);
-	m_camera.setLens(90.0f,width,height,1.0f,5000.0f);
+	int width;
+	int height;
+	game.GetRenderer().GetDisplayMode(width,height);
+	m_camera.setLens(90.0f,1920,1080,1.0f,5000.0f);
 	m_camera.lookAt(glm::vec3(0.0f,0.0f,100.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
 	m_camera.update();
 
@@ -147,7 +147,7 @@ void adventure::Draw(Game& game)
 
 	int zPos = -400;
 
-	//Draws X (10) layers of stars
+	//Draws layers of stars
 	for(int i = 0; i < 4; ++i)
 	{
 		glm::mat4 T = glm::translate(0.0f,0.0f,(float)zPos);
@@ -178,23 +178,5 @@ void adventure::Draw(Game& game)
 	{
 		m_quadTree.Render(renderer);
 	}
-
-	TextureInfo info;
-	//if(renderer.GetResourceManager().GetTextureInfo("ship",info))
-	{
-
-		std::stringstream stream;
-		stream << game.GetFps();
-		//stream  << info.pImg << std::endl;
-		//Log::Instance().Write(info.pImg[0]);
-
-		renderer.SetRenderSpace(RenderSpace::Screen);
-		renderer.DrawString(stream.str().c_str(),glm::vec3(-850.0f,500.0f,-5.0f),glm::vec2(40.0f));
-	}
-
-	//Log::Instance().Write(*info.pImg);
-
-	//m_gui.Render(renderer);
-
 }
 
