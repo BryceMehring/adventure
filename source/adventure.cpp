@@ -111,7 +111,7 @@ void adventure::Update(Game& game)
 			m_deathAnimation.push_back(std::make_pair((*iter)->GetPos(),SpriteAnimation(90,30)));
 
 			m_quadTree.Erase(**iter);
-			m_enemies.erase(iter);
+			iter = m_enemies.erase(iter);
 		}
 		else
 		{
