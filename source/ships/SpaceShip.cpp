@@ -81,7 +81,7 @@ void SpaceShip::Render(IRenderer& renderer)
 		T = glm::rotate(T,m_fAngle,glm::vec3(0,0,1));
 		T = glm::scale(T,50.0f,50.0f,1.0f);
 
-		glm::vec3 color = m_bCollison ? glm::vec3(0.9f,0.3f,0.3f) : glm::vec3(1.0f);
+		glm::vec4 color = m_bCollison ? glm::vec4(0.9f,0.3f,0.3f,1.0f) : glm::vec4(1.0f);
 
 		renderer.DrawSprite(m_sprite,T,color,glm::vec2(1.0f),m_tile);
 

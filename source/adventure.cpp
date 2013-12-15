@@ -67,7 +67,7 @@ void adventure::Init(Game& game)
 	m_enemies.reserve(500);
 
 	// ships
-	for(unsigned int i = 0; i < 2000; ++i)
+	for(unsigned int i = 0; i < 700; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
@@ -77,7 +77,7 @@ void adventure::Init(Game& game)
 	}
 
 	//Squid
-	for(unsigned int i = 0; i < 500; ++i)
+	for(unsigned int i = 0; i < 20; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::diskRand(7000.0f),-100.0f);
 		unsigned int shipTile = 3;
@@ -152,7 +152,7 @@ void adventure::Draw(Game& game)
 	{
 		glm::mat4 T = glm::translate(0.0f,0.0f,(float)zPos);
 		T = glm::scale(T,8000.0f,8000.0f,1.0f);
-		renderer.DrawSprite("stars",T,glm::vec3(1.0f),glm::vec2(40.0f /(i + 1),40.0f / (i + 1))); // 15
+		renderer.DrawSprite("stars",T,glm::vec4(1.0f),glm::vec2(40.0f /(i + 1),40.0f / (i + 1))); // 15
 
 		zPos += 15;
 	}
@@ -171,7 +171,7 @@ void adventure::Draw(Game& game)
 		glm::mat4 T = glm::translate(pos.x,pos.y,pos.z);
 		T = glm::scale(T,glm::vec3(200.0f,200.0f,1.0f));
 
-		renderer.DrawSprite("explosion",T,glm::vec3(1),glm::vec2(1),iter.second.GetTile());
+		renderer.DrawSprite("explosion",T,glm::vec4(1.0f,1.0f,1.0f,0.9f),glm::vec2(1),iter.second.GetTile());
 	}
 
 	if(m_bRenderQuadTree)

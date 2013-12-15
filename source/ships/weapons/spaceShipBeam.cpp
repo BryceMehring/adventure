@@ -83,5 +83,5 @@ void SpaceShipBeam::Render(IRenderer& renderer)
 
 	unsigned int tile = m_animation.GetTile();
 
-	renderer.DrawSprite("weapon",glm::scale(T,r,r,1.0f),glm::vec3(1.0f),glm::vec2(1.0f),tile);
+	renderer.DrawSprite("weapon",glm::scale(T,r,r,1.0f),glm::vec4(1.0f),glm::vec2(1.0f),tile);
 }
