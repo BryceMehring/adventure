@@ -178,5 +178,10 @@ void adventure::Draw(Game& game)
 	{
 		m_quadTree.Render(renderer);
 	}
+
+	std::ostringstream converter;
+	converter << "Number of enemies: " <<this->m_enemies.size();
+	renderer.SetRenderSpace(RenderSpace::Screen);
+	renderer.DrawString(converter.str().c_str(),glm::vec3(0.0f,50.0f,-10.0f),0.5f);
 }
 
