@@ -1,6 +1,6 @@
 #include "adventure.h"
 #include "IRenderer.h"
-#include "IKMInput.h"
+#include "IInput.h"
 #include "Game.h"
 #include "Camera.h"
 #include "Log.h"
@@ -9,7 +9,6 @@
 #include "ships/AISpaceShip.h"
 
 #include <sstream>
-#include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/random.hpp>
 
@@ -57,33 +56,33 @@ void adventure::Init(Game& game)
 {
 	int width;
 	int height;
-	game.GetRenderer().GetDisplayMode(width,height);
-	m_camera.setLens(90.0f,1920,1080,1.0f,5000.0f);
-	m_camera.lookAt(glm::vec3(0.0f,0.0f,100.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
-	m_camera.update();
+	game.GetRenderer().GetDisplayMode(&width,&height);
+	m_camera.SetLens(90.0f,(float)width,(float)height,0.1f,7000.0f);
+	m_camera.LookAt(glm::vec3(0.0f,0.0f,1000.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+	m_camera.Update();
 
 	game.GetRenderer().SetCamera(&m_camera);
 
 	m_enemies.reserve(500);
 
 	// ships
-	for(unsigned int i = 0; i < 700; ++i)
+	for(unsigned int i = 0; i < 500; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
-		m_enemies.push_back(std::auto_ptr<SpaceShip>(new AISpaceShip("ship",shipTile,20.0f,pos)));
+		m_enemies.push_back(std::auto_ptr<SpaceShip>(new AISpaceShip("ship",shipTile,30 + rand() % 50,pos)));
 
-		this->m_quadTree.Insert(*m_enemies.back());
+		m_quadTree.Insert(*m_enemies.back());
 	}
 
 	//Squid
-	for(unsigned int i = 0; i < 20; ++i)
+	for (unsigned int i = 0; i < 500; ++i)
 	{
-		glm::vec3 pos = glm::vec3(glm::diskRand(7000.0f),-100.0f);
+		glm::vec3 pos = glm::vec3(glm::diskRand(6000.0f),-100.0f);
 		unsigned int shipTile = 3;
 		m_enemies.push_back(std::auto_ptr<SpaceShip>(new SquidSpaceShip("squid",shipTile,20.0f,pos)));
 
-		this->m_quadTree.Insert(*m_enemies.back());
+		m_quadTree.Insert(*m_enemies.back());
 	}
 
 	game.GetRenderer().SetClearColor(glm::vec3(0.01,0.01,0.1));
@@ -102,11 +101,11 @@ void adventure::Destroy(Game& game)
 // Called every frame to update the state of the game
 void adventure::Update(Game& game)
 {
-	m_spaceShip.Update(game.GetDt(),m_camera,game.GetInput(),m_quadTree);
+	m_spaceShip.Update((float)game.GetDt(),m_camera,game.GetInput(),m_quadTree);
 
 	for(auto iter = this->m_enemies.begin(); iter != m_enemies.end(); )
 	{
-		if((*iter)->Update(game.GetDt(),m_camera,m_quadTree))
+		if((*iter)->Update((float)game.GetDt(),m_camera,m_quadTree))
 		{
 			m_deathAnimation.push_back(std::make_pair((*iter)->GetPos(),SpriteAnimation(90,30)));
 
@@ -148,13 +147,13 @@ void adventure::Draw(Game& game)
 	int zPos = -400;
 
 	//Draws layers of stars
-	for(int i = 0; i < 4; ++i)
+	for(int i = 0; i < 5; ++i)
 	{
-		glm::mat4 T = glm::translate(0.0f,0.0f,(float)zPos);
-		T = glm::scale(T,8000.0f,8000.0f,1.0f);
+		glm::mat4 T = glm::translate(glm::vec3(0.0f,0.0f,(float)zPos));
+		T = glm::scale(T,glm::vec3(8000.0f,8000.0f,1.0f));
 		renderer.DrawSprite("stars",T,glm::vec4(1.0f),glm::vec2(40.0f /(i + 1),40.0f / (i + 1))); // 15
 
-		zPos += 15;
+		zPos += 30;
 	}
 
 	//Loops over all enemies
@@ -167,8 +166,7 @@ void adventure::Draw(Game& game)
 
 	for(auto& iter : m_deathAnimation)
 	{
-		glm::vec3 pos = iter.first;
-		glm::mat4 T = glm::translate(pos.x,pos.y,pos.z);
+		glm::mat4 T = glm::translate(iter.first);
 		T = glm::scale(T,glm::vec3(200.0f,200.0f,1.0f));
 
 		renderer.DrawSprite("explosion",T,glm::vec4(1.0f,1.0f,1.0f,0.9f),glm::vec2(1),iter.second.GetTile());
@@ -182,6 +180,6 @@ void adventure::Draw(Game& game)
 	std::ostringstream converter;
 	converter << "Number of enemies: " <<this->m_enemies.size();
 	renderer.SetRenderSpace(RenderSpace::Screen);
-	renderer.DrawString(converter.str().c_str(),glm::vec3(0.0f,50.0f,-10.0f),0.5f);
+	renderer.DrawString(converter.str().c_str(),glm::vec3(0.0f,100.0f,-10.0f),0.5f);
 }
 

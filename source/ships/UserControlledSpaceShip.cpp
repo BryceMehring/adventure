@@ -1,5 +1,5 @@
 #include "UserControlledSpaceShip.h"
-#include "IKMInput.h"
+#include "IInput.h"
 #include "Camera.h"
 
 #include <GLFW/glfw3.h>
@@ -13,7 +13,7 @@ UserControlledSpaceShip::~UserControlledSpaceShip()
 
 }
 
-bool UserControlledSpaceShip::Update(float dt, Camera& cam, IKMInput& input, QuadTree& tree)
+bool UserControlledSpaceShip::Update(float dt, Camera& cam, IInput& input, QuadTree& tree)
 {
 	if(input.KeyPress('W',false))
 	{
@@ -37,7 +37,7 @@ bool UserControlledSpaceShip::Update(float dt, Camera& cam, IKMInput& input, Qua
 		m_tile = (m_tile + 1) % 5;
 	}
 
-	if(input.KeyPress(GLFW_KEY_SPACE,false))
+	if (input.KeyPress(GLFW_KEY_SPACE, false))
 	{
 		//m_bDrawLazers = !m_bDrawLazers;
 
@@ -68,8 +68,8 @@ bool UserControlledSpaceShip::Update(float dt, Camera& cam, IKMInput& input, Qua
 
 	bool success = SpaceShip::Update(dt,cam,tree);
 
-	cam.lookAt(glm::vec3(m_pos.x,m_pos.y,-m_pos.z),glm::vec3(m_pos.x,m_pos.y,0.0f),glm::vec3(0,1,0));
-	cam.update();
+	cam.LookAt(glm::vec3(m_pos.x,m_pos.y,-m_pos.z),glm::vec3(m_pos.x,m_pos.y,0.0f));
+	cam.Update();
 
 	return success;
 

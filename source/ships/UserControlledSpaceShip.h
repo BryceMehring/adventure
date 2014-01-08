@@ -11,7 +11,7 @@ public:
 	UserControlledSpaceShip();
 	virtual ~UserControlledSpaceShip();
 
-	virtual bool Update(float dt, Camera& cam, class IKMInput&, QuadTree& tree);
+	virtual bool Update(float dt, Camera& cam, class IInput&, QuadTree& tree);
 	virtual void Render(class IRenderer&);
 
 private:

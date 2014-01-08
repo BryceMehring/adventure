@@ -79,9 +79,9 @@ void SpaceShipBeam::Render(IRenderer& renderer)
 {
 	float r = m_collisionPoly.GetCircle().r * 2.0f;
 
-	glm::mat4 T = glm::translate(m_pos.x,m_pos.y,-100.0f);
+	glm::mat4 T = glm::translate(glm::vec3(m_pos.x,m_pos.y,-100.0f));
 
 	unsigned int tile = m_animation.GetTile();
 
-	renderer.DrawSprite("weapon",glm::scale(T,r,r,1.0f),glm::vec4(1.0f),glm::vec2(1.0f),tile);
+	renderer.DrawSprite("weapon",glm::scale(T,glm::vec3(r,r,1.0f)),glm::vec4(1.0f),glm::vec2(1.0f),tile);
 }
