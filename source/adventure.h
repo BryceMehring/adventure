@@ -48,7 +48,7 @@ private:
 	UserControlledSpaceShip m_spaceShip;
 	std::vector<std::auto_ptr<SpaceShip>> m_enemies;
 	std::deque<std::pair<glm::vec3,SpriteAnimation>> m_deathAnimation;
-	Camera m_camera;
+	PerspectiveCamera m_camera;
 	QuadTree m_quadTree;
 	UI::GUI m_gui;
 	UI::ProgressBar* m_pProgressBar;
