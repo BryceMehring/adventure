@@ -5,9 +5,9 @@
 #include <sstream>
 
 SpaceShip::SpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : m_sprite(str), m_pos(pos), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),s)),
-	m_tile(tile), m_fAngle(0.0f), m_fSpeed(50.0f), m_bVisable(false), m_bCollison(false), m_iHealth(100)
+	m_tile(tile), m_fAngle(0.0f), m_fSpeed(50.0f), m_bVisable(false), m_bCollison(false), m_iHealth(3)
 {
-	UI::Menu* pMenu = new UI::Menu();
+	//UI::Menu* pMenu = new UI::Menu();
 
 	/*UI::ProgressBar* pProgressBar = new UI::ProgressBar(glm::vec2(pos.x - 10.0f,pos.y + 10.0f),glm::vec2(pos.x + 10.0f,pos.y + 10.0f),callback);
 	pMenu->AddElement(pProgressBar);
@@ -16,7 +16,7 @@ SpaceShip::SpaceShip(const std::string& str, unsigned int tile, float s, const g
 
 	m_pProgressBar->SetProgress(0.5f);*/
 
-	m_gui.SetMenu(pMenu);
+	//m_gui.SetMenu(pMenu);
 }
 
 SpaceShip::~SpaceShip()
@@ -74,8 +74,8 @@ void SpaceShip::Render(IRenderer& renderer)
 	if(m_bVisable)
 	{
 		float w = m_collisonPolygon.GetCircle().r * 2;
-		glm::mat4 T = glm::translate(glm::vec3(m_pos.x,m_pos.y,-100.0f));
-		T = glm::rotate(T,m_fAngle,glm::vec3(0,0,1));
+		glm::mat4 T = glm::translate(m_pos);
+		T = glm::rotate(T,glm::radians(m_fAngle),glm::vec3(0,0,1));
 		T = glm::scale(T,glm::vec3(w,w,1.0f));
 
 		glm::vec4 color = m_bCollison ? glm::vec4(0.9f,0.3f,0.3f,1.0f) : glm::vec4(1.0f);

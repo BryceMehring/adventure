@@ -14,8 +14,6 @@
 
 #include <functional>
 
-#include <GLFW/glfw3.h>
-
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
 #else
@@ -57,7 +55,7 @@ void adventure::Init(Game& game)
 	int width;
 	int height;
 	game.GetRenderer().GetDisplayMode(&width,&height);
-	m_camera.SetLens(90.0f,(float)width,(float)height,0.1f,7000.0f);
+	m_camera.SetLens(90.0f, (float)width, (float)height, 0.1f, 7000.0f);
 	m_camera.LookAt(glm::vec3(0.0f,0.0f,1000.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
 	m_camera.Update();
 
@@ -130,7 +128,7 @@ void adventure::Update(Game& game)
 		}
 	}
 
-	if(game.GetInput().KeyPress(GLFW_KEY_F1))
+	if(game.GetInput().KeyPress(KEY_F1))
 	{
 		m_bRenderQuadTree = !m_bRenderQuadTree;
 	}

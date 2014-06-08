@@ -9,21 +9,17 @@ include(${GAME_ENGINE_INCLUDE_DIR}/CMake/VisualStudioVersionCheck.cmake)
 include(${GAME_ENGINE_INCLUDE_DIR}/CMake/CompileFlags.cmake)
 include(${GAME_ENGINE_INCLUDE_DIR}/CMake/RedirectOutputTo.cmake)
 
-RedirectOutputTo(plugin/adventure)
-
-find_package(GAME_ENGINE)
-include_directories(${GAME_ENGINE_INCLUDE_DIR}/GameEngine)
-include_directories(${GAME_ENGINE_INCLUDE_DIR}/GameEngine/interfaces)
-include_directories(${GAME_ENGINE_INCLUDE_DIR}/common)
-include_directories(${GAME_ENGINE_INCLUDE_DIR}/QuadTree)
-include_directories(${GAME_ENGINE_INCLUDE_DIR}/GUI)
-
-find_package(GLFW)
-include_directories(${GLFW_INCLUDE_DIR})
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/source/GameEngine)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/source/GameEngine/interfaces)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/source/common)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/source/QuadTree)
+include_directories(${GAME_ENGINE_INCLUDE_DIR}/source/GUI)
 
 find_package(GLM)
 include_directories(${GLM_INCLUDE_DIR})
+add_definitions(-DGLM_FORCE_RADIANS)
 
+RedirectOutputTo(plugin/adventure)
 add_subdirectory(${CMAKE_SOURCE_DIR}/source)
 
 

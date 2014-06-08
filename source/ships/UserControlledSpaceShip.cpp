@@ -2,9 +2,7 @@
 #include "IInput.h"
 #include "Camera.h"
 
-#include <GLFW/glfw3.h>
-
-UserControlledSpaceShip::UserControlledSpaceShip() : SpaceShip("ship",3, 30.0f,glm::vec3(0.0f,0.0f,-99.0f))
+UserControlledSpaceShip::UserControlledSpaceShip() : SpaceShip("ship",3, 30.0f,glm::vec3(0.0f,0.0f,-50.0f))
 {
 }
 
@@ -37,7 +35,7 @@ bool UserControlledSpaceShip::Update(float dt, Camera& cam, IInput& input, QuadT
 		m_tile = (m_tile + 1) % 5;
 	}
 
-	if (input.KeyPress(GLFW_KEY_SPACE, false))
+	if (input.KeyPress(KEY_SPACE, false))
 	{
 		//m_bDrawLazers = !m_bDrawLazers;
 
