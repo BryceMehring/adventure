@@ -4,7 +4,12 @@ project(adventure CXX)
 set(ENGINE_VERSION_MAJOR 1)
 set(ENGINE_VERSION_MINOR 0)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../GameEngine/CMake/Modules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/Modules")
+
+find_package(GAME_ENGINE)
+
+list(APPEND CMAKE_MODULE_PATH "${GAME_ENGINE_INCLUDE_DIR}/CMake/Modules")
+
 include(${GAME_ENGINE_INCLUDE_DIR}/CMake/VisualStudioVersionCheck.cmake)
 include(${GAME_ENGINE_INCLUDE_DIR}/CMake/CompileFlags.cmake)
 include(${GAME_ENGINE_INCLUDE_DIR}/CMake/RedirectOutputTo.cmake)
