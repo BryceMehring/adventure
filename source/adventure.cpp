@@ -13,6 +13,7 @@
 #include <glm/gtc/random.hpp>
 
 #include <functional>
+#include <algorithm>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -64,7 +65,7 @@ void adventure::Init(Game& game)
 	m_enemies.reserve(500);
 
 	// ships
-	for(unsigned int i = 0; i < 500; ++i)
+	for(unsigned int i = 0; i < 2000; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
@@ -103,7 +104,9 @@ void adventure::Update(Game& game)
 
 	for(auto iter = this->m_enemies.begin(); iter != m_enemies.end(); )
 	{
-		if((*iter)->Update((float)game.GetDt(),m_camera,m_quadTree))
+		bool bDead = (*iter)->Update((float)game.GetDt(),m_camera,m_quadTree);
+
+		if(bDead || std::find(m_selectedObjects.begin(), m_selectedObjects.end(), &(**iter)) != m_selectedObjects.end())
 		{
 			m_deathAnimation.push_back(std::make_pair((*iter)->GetPos(),SpriteAnimation(90,30)));
 
@@ -131,6 +134,29 @@ void adventure::Update(Game& game)
 	if(game.GetInput().KeyPress(KEY_F1))
 	{
 		m_bRenderQuadTree = !m_bRenderQuadTree;
+	}
+
+	IInput& input = game.GetInput();
+
+	if((m_drawSelectionQuad = input.GetSelectedRect(m_Min, m_Max)))
+	{
+		IRenderer& renderer = game.GetRenderer();
+
+		int width, height;
+		renderer.GetDisplayMode(&width, &height);
+
+		float depth = renderer.ReadPixels(glm::ivec2(width / 2, height / 2));
+
+		glm::vec3 unprojectedMin = m_camera.UnProject(glm::vec3(m_Min, depth), glm::vec4(0.0f, 0.0f, width, height));
+		glm::vec3 unprojectedMax = m_camera.UnProject(glm::vec3(m_Max, depth), glm::vec4(0.0f, 0.0f, width, height));
+
+		Math::CRectangle collisionRect(Math::FRECT(glm::vec2(unprojectedMin.x, unprojectedMax.y), glm::vec2(unprojectedMax.x, unprojectedMin.y)));
+
+		m_selectedObjects.clear();
+		m_quadTree.QueryNearObjects(collisionRect, m_selectedObjects);
+
+		m_unprojectedMin = unprojectedMin;
+		m_unprojectedMax = unprojectedMax;
 	}
 
 	m_gui.Update(game.GetInput(),game.GetDt());
@@ -178,6 +204,20 @@ void adventure::Draw(Game& game)
 	std::ostringstream converter;
 	converter << "Number of enemies: " <<this->m_enemies.size();
 	renderer.SetRenderSpace(RenderSpace::Screen);
-	renderer.DrawString(converter.str().c_str(),glm::vec3(0.0f,100.0f,-10.0f),0.5f);
+	renderer.DrawString(converter.str().c_str(),glm::vec3(0.0f,100.0f,-10.0f));
+
+	converter.str("");
+	converter << "Selected objects: " << this->m_selectedObjects.size() << std::endl;
+	converter << "Selected RECT in world space: (" << m_unprojectedMin.x << "," << m_unprojectedMin.y << "), " << std::endl <<
+												"("<< m_unprojectedMax.x << "," << m_unprojectedMax.y << ")";
+	renderer.DrawString(converter.str().c_str(), glm::vec3(600.0f, 200.0f, -10.0f));
+
+	if(m_drawSelectionQuad)
+	{
+		glm::mat4 transformation = glm::translate(glm::vec3((m_Min + m_Max) / 2,0.0f));
+		transformation = glm::scale(transformation, glm::vec3(m_Max.x - m_Min.x, m_Max.y - m_Min.y, 1.0f));
+		renderer.DrawSprite(transformation, glm::vec4(1.0f,0.0f,0.0f,0.5f));
+	}
+
 }
 

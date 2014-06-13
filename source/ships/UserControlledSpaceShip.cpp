@@ -2,7 +2,7 @@
 #include "IInput.h"
 #include "Camera.h"
 
-UserControlledSpaceShip::UserControlledSpaceShip() : SpaceShip("ship",3, 30.0f,glm::vec3(0.0f,0.0f,-50.0f))
+UserControlledSpaceShip::UserControlledSpaceShip() : SpaceShip("ship",3, 30.0f,glm::vec3(0.0f,0.0f,-99.0f))
 {
 }
 
@@ -43,7 +43,7 @@ bool UserControlledSpaceShip::Update(float dt, Camera& cam, IInput& input, QuadT
 		tree.Insert(m_beams.back());
 	}
 
-	m_pos.z += 100.0f*dt*input.MouseY();
+	//m_pos.z += 100.0f*dt*input.MouseY();
 
 	/*std::vector<ISpatialObject*> nearObjects;
 	tree.QueryNearObjects(this,nearObjects);

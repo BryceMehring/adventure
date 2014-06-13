@@ -56,6 +56,15 @@ private:
 
 	unsigned int creatureCount;
 
+	std::vector<ISpatialObject*> m_selectedObjects;
+
+	glm::ivec2 m_Min;
+	glm::ivec2 m_Max;
+	bool m_drawSelectionQuad = false;
+
+	glm::vec3 m_unprojectedMin;
+	glm::vec3 m_unprojectedMax;
+
 	void BuildGUI();
 
 };
