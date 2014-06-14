@@ -13,7 +13,6 @@
 #include <glm/gtc/random.hpp>
 
 #include <functional>
-#include <algorithm>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -65,7 +64,7 @@ void adventure::Init(Game& game)
 	m_enemies.reserve(500);
 
 	// ships
-	for(unsigned int i = 0; i < 2000; ++i)
+	for(unsigned int i = 0; i < 1000; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
@@ -126,7 +125,6 @@ void adventure::Update(Game& game)
 		m_cameraPos.x += 200.0f * game.GetDt();
 	}
 
-	//static float zLevel = 100.0f;
 	m_cameraPos.z += -30*input.MouseZ();
 
 	m_camera.LookAt(m_cameraPos, glm::vec3(m_cameraPos.x, m_cameraPos.y, 0.0f));
@@ -264,8 +262,6 @@ void adventure::Draw(Game& game)
 
 	converter.str("");
 	converter << "Selected objects: " << this->m_selectedObjects.size() << std::endl;
-	converter << "Selected RECT in world space: (" << m_unprojectedMin.x << "," << m_unprojectedMin.y << "), " << std::endl <<
-												"("<< m_unprojectedMax.x << "," << m_unprojectedMax.y << ")";
 	renderer.DrawString(converter.str().c_str(), glm::vec3(600.0f, 200.0f, -10.0f));
 
 	if(m_drawSelectionQuad)

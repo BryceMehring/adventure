@@ -53,22 +53,26 @@ void SpaceShip::PrepareToDie()
 bool SpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 {
 	glm::vec3 posDiff = m_target - m_pos;
-	m_fAngle = atan2(posDiff.y, posDiff.x) + glm::radians(-90.0f);
-	m_pos += posDiff * dt;
-
-	//m_pos += m_fSpeed * glm::vec3(-sin(m_fAngle * 3.14f / 180.0f),cos(m_fAngle * 3.14f / 180.0f),0.0f) * dt;
+	glm::vec3 newPos = m_pos + posDiff * dt;
 
 	m_bVisable = cam.IsVisible(glm::vec3(m_pos.x - 50.0f,m_pos.y - 50.0f,-100.0f),glm::vec3(m_pos.x + 50.0f,m_pos.y + 50.0f,-100.0f));
 
-	//m_pProgressBar->SetProgress(m_iHealth / 100.0f);
-	//m_pProgressBar->SetPos(glm::vec2(m_pos));
+	m_fAngle = atan2(posDiff.y, posDiff.x) + glm::radians(-90.0f);
 
-	//m_fSpeed -= 10.0f * dt;
-	//m_fSpeed = glm::clamp(m_fSpeed,0.0f,1000.0f);
+	Math::CCircle tempCircle = m_collisonPolygon;
+	tempCircle.GetCircle().center = glm::vec2(newPos.x,newPos.y);
 
-	tree.Erase(*this);
-	m_collisonPolygon.GetCircle().center = glm::vec2(m_pos.x,m_pos.y);
-	tree.Insert(*this);
+	std::vector<ISpatialObject*> nearObjects;
+	tree.QueryNearObjects(tempCircle, nearObjects);
+
+	if(nearObjects.size() <= 1)
+	{
+		m_pos = newPos;
+
+		tree.Erase(*this);
+		m_collisonPolygon.GetCircle().center = glm::vec2(m_pos.x,m_pos.y);
+		tree.Insert(*this);
+	}
 
 	return m_iHealth <= 0;
 }
