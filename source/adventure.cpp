@@ -57,7 +57,7 @@ void adventure::Init(Game& game)
 	int height;
 	game.GetRenderer().GetDisplayMode(&width,&height);
 	m_camera.SetLens(90.0f, (float)width, (float)height, 0.1f, 7000.0f);
-	m_camera.LookAt(glm::vec3(0.0f,0.0f,1000.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+	m_camera.LookAt(glm::vec3(0.0f,0.0f,99.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
 	m_camera.Update();
 
 	game.GetRenderer().SetCamera(&m_camera);
@@ -75,14 +75,14 @@ void adventure::Init(Game& game)
 	}
 
 	//Squid
-	for (unsigned int i = 0; i < 500; ++i)
+	/*for (unsigned int i = 0; i < 500; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::diskRand(6000.0f),-100.0f);
 		unsigned int shipTile = 3;
 		m_enemies.push_back(std::auto_ptr<SpaceShip>(new SquidSpaceShip("squid",shipTile,20.0f,pos)));
 
 		m_quadTree.Insert(*m_enemies.back());
-	}
+	}*/
 
 	game.GetRenderer().SetClearColor(glm::vec3(0.01,0.01,0.1));
 
@@ -100,13 +100,44 @@ void adventure::Destroy(Game& game)
 // Called every frame to update the state of the game
 void adventure::Update(Game& game)
 {
-	m_spaceShip.Update((float)game.GetDt(),m_camera,game.GetInput(),m_quadTree);
+	IRenderer& renderer = game.GetRenderer();
+	IInput& input = game.GetInput();
 
+	int width, height;
+	renderer.GetDisplayMode(&width, &height);
+
+	const glm::ivec2& cursorPos = input.GetCursorPos();
+
+	// Update the camera with user input
+	if(input.KeyPress(KEY_UP, false) || (float)cursorPos.y > 0.9f*height)
+	{
+		m_cameraPos.y += 200.0f * game.GetDt();
+	}
+	if(input.KeyPress(KEY_DOWN, false) || (float)cursorPos.y < 0.1f*height)
+	{
+		m_cameraPos.y += -200.0f * game.GetDt();
+	}
+	if(input.KeyPress(KEY_LEFT, false) || (float)cursorPos.x < 0.1f*width)
+	{
+		m_cameraPos.x += -200.0f * game.GetDt();
+	}
+	if(input.KeyPress(KEY_RIGHT, false) || (float)cursorPos.x > 0.9f*width)
+	{
+		m_cameraPos.x += 200.0f * game.GetDt();
+	}
+
+	//static float zLevel = 100.0f;
+	m_cameraPos.z += -30*input.MouseZ();
+
+	m_camera.LookAt(m_cameraPos, glm::vec3(m_cameraPos.x, m_cameraPos.y, 0.0f));
+	m_camera.Update();
+
+	// Update all of the enemy ships
 	for(auto iter = this->m_enemies.begin(); iter != m_enemies.end(); )
 	{
 		bool bDead = (*iter)->Update((float)game.GetDt(),m_camera,m_quadTree);
 
-		if(bDead || std::find(m_selectedObjects.begin(), m_selectedObjects.end(), &(**iter)) != m_selectedObjects.end())
+		if(bDead)
 		{
 			m_deathAnimation.push_back(std::make_pair((*iter)->GetPos(),SpriteAnimation(90,30)));
 
@@ -119,6 +150,7 @@ void adventure::Update(Game& game)
 		}
 	}
 
+	// Update all the death animations
 	for(auto iter = m_deathAnimation.begin(); iter != m_deathAnimation.end(); )
 	{
 		if(iter->second.Update(game.GetDt()))
@@ -131,30 +163,49 @@ void adventure::Update(Game& game)
 		}
 	}
 
-	if(game.GetInput().KeyPress(KEY_F1))
-	{
-		m_bRenderQuadTree = !m_bRenderQuadTree;
-	}
-
-	IInput& input = game.GetInput();
-
+	// Check if the user made a selection with the mouse
 	if((m_drawSelectionQuad = input.GetSelectedRect(m_Min, m_Max)))
 	{
-		IRenderer& renderer = game.GetRenderer();
-
-		int width, height;
-		renderer.GetDisplayMode(&width, &height);
 
 		glm::vec3 unprojectedMin = m_camera.UnProjectWS(glm::vec3(m_Min, -99), glm::vec4(0.0f, 0.0f, width, height));
 		glm::vec3 unprojectedMax = m_camera.UnProjectWS(glm::vec3(m_Max, -99), glm::vec4(0.0f, 0.0f, width, height));
 
 		Math::CRectangle collisionRect(Math::FRECT(glm::vec2(unprojectedMin.x, unprojectedMax.y), glm::vec2(unprojectedMax.x, unprojectedMin.y)));
 
-		m_selectedObjects.clear();
-		m_quadTree.QueryNearObjects(collisionRect, m_selectedObjects);
+		if(!input.KeyPress(KEY_LEFT_CONTROL, false) && !input.KeyPress(KEY_RIGHT_CONTROL, false))
+		{
+			m_selectedObjects.clear();
+		}
+
+		std::vector<ISpatialObject*> newSelectedObjects;
+		m_quadTree.QueryNearObjects(collisionRect, newSelectedObjects);
+
+		for(auto iter : newSelectedObjects)
+		{
+			m_selectedObjects.insert(iter);
+		}
 
 		m_unprojectedMin = unprojectedMin;
 		m_unprojectedMax = unprojectedMax;
+	}
+
+	if(input.MouseClick(1))
+	{
+		glm::vec3 worldPos = m_camera.UnProjectWS(glm::vec3(cursorPos, -100), glm::vec4(0,0, width, height));
+
+		for(auto unit : m_selectedObjects)
+		{
+			SpaceShip* pShip = static_cast<SpaceShip*>(unit);
+			if(pShip != nullptr)
+			{
+				pShip->MoveTo(worldPos);
+			}
+		}
+	}
+
+	if(input.KeyPress(KEY_F1))
+	{
+		m_bRenderQuadTree = !m_bRenderQuadTree;
 	}
 
 	m_gui.Update(game.GetInput(),game.GetDt());
@@ -184,14 +235,21 @@ void adventure::Draw(Game& game)
 		iter->Render(renderer);
 	}
 
-	m_spaceShip.Render(renderer);
-
 	for(auto& iter : m_deathAnimation)
 	{
 		glm::mat4 T = glm::translate(iter.first);
 		T = glm::scale(T,glm::vec3(200.0f,200.0f,1.0f));
 
 		renderer.DrawSprite("explosion",T,glm::vec4(1.0f,1.0f,1.0f,0.9f),glm::vec2(1),iter.second.GetTile());
+	}
+
+	for(auto& iter : m_selectedObjects)
+	{
+		SpaceShip* pShip = static_cast<SpaceShip*>(iter->QueryInterface(SpaceShip::INTERFACE_SPACESHIP));
+		if(pShip != nullptr)
+		{
+			renderer.DrawCircle(pShip->GetPos(), pShip->GetRadius(), 2.0f, 40.0f, glm::vec4(0.2f,0.4f,0.6f, 0.7f));
+		}
 	}
 
 	if(m_bRenderQuadTree)

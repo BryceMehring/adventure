@@ -4,9 +4,9 @@
 #include "IGameState.h"
 #include "Camera.h"
 #include "QuadTree.h"
-#include "ships/UserControlledSpaceShip.h"
 #include "GUI.h"
 #include "ProgressBar.h"
+#include "ships/SpaceShip.h"
 
 #include <vector>
 #include <deque>
@@ -28,9 +28,6 @@ public:
 	// returns the version number of the plugin
 	virtual int GetVersion() const { return 0; }
 
-	virtual void Init(class asIScriptEngine*) {}
-	virtual void Destroy(class asIScriptEngine*) {}
-
 	// Called only once when the plugin is created
 	virtual void Init(Game& game);
 
@@ -45,10 +42,12 @@ public:
 
 private:
 
-	UserControlledSpaceShip m_spaceShip;
 	std::vector<std::auto_ptr<SpaceShip>> m_enemies;
 	std::deque<std::pair<glm::vec3,SpriteAnimation>> m_deathAnimation;
+
 	PerspectiveCamera m_camera;
+	glm::vec3 m_cameraPos = glm::vec3(0,0,99);
+
 	QuadTree m_quadTree;
 	UI::GUI m_gui;
 	UI::ProgressBar* m_pProgressBar;
@@ -56,7 +55,7 @@ private:
 
 	unsigned int creatureCount;
 
-	std::vector<ISpatialObject*> m_selectedObjects;
+	std::set<ISpatialObject*> m_selectedObjects;
 
 	glm::ivec2 m_Min;
 	glm::ivec2 m_Max;

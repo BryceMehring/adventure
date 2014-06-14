@@ -22,6 +22,7 @@ public:
 	virtual const glm::vec3& GetPos() const { return m_pos; }
 	virtual glm::vec2 GetDir() const { return glm::vec2(0.0f); }
 	virtual float GetSpeed() const { return m_fSpeed; }
+	float GetRadius() const { return m_collisonPolygon.GetCircle().r; }
 
 	virtual void* QueryInterface(unsigned int) const;
 
@@ -30,6 +31,8 @@ public:
 	virtual bool Update(float dt, Camera&, QuadTree& tree);
 	virtual void Render(class IRenderer&);
 
+	void MoveTo(const glm::vec3& target);
+
 	virtual void Destroy();
 
 	static const unsigned int INTERFACE_SPACESHIP = 4272475246;
@@ -37,7 +40,10 @@ public:
 protected:
 
 	std::string m_sprite;
+
 	glm::vec3 m_pos;
+	glm::vec3 m_target;
+
 	Math::CCircle m_collisonPolygon;
 	unsigned int m_tile;
 	float m_fAngle;

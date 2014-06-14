@@ -4,7 +4,7 @@
 #include <glm/gtx/transform.hpp>
 #include <sstream>
 
-SpaceShip::SpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : m_sprite(str), m_pos(pos), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),s)),
+SpaceShip::SpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : m_sprite(str), m_pos(pos), m_target(pos), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),s)),
 	m_tile(tile), m_fAngle(0.0f), m_fSpeed(50.0f), m_bVisable(false), m_bCollison(false), m_iHealth(3)
 {
 	//UI::Menu* pMenu = new UI::Menu();
@@ -52,15 +52,19 @@ void SpaceShip::PrepareToDie()
 
 bool SpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 {
-	m_pos += m_fSpeed * glm::vec3(-sin(m_fAngle * 3.14f / 180.0f),cos(m_fAngle * 3.14f / 180.0f),0.0f) * dt;
+	glm::vec3 posDiff = m_target - m_pos;
+	m_fAngle = atan2(posDiff.y, posDiff.x) + glm::radians(-90.0f);
+	m_pos += posDiff * dt;
+
+	//m_pos += m_fSpeed * glm::vec3(-sin(m_fAngle * 3.14f / 180.0f),cos(m_fAngle * 3.14f / 180.0f),0.0f) * dt;
 
 	m_bVisable = cam.IsVisible(glm::vec3(m_pos.x - 50.0f,m_pos.y - 50.0f,-100.0f),glm::vec3(m_pos.x + 50.0f,m_pos.y + 50.0f,-100.0f));
 
 	//m_pProgressBar->SetProgress(m_iHealth / 100.0f);
 	//m_pProgressBar->SetPos(glm::vec2(m_pos));
 
-	m_fSpeed -= 10.0f * dt;
-	m_fSpeed = glm::clamp(m_fSpeed,0.0f,1000.0f);
+	//m_fSpeed -= 10.0f * dt;
+	//m_fSpeed = glm::clamp(m_fSpeed,0.0f,1000.0f);
 
 	tree.Erase(*this);
 	m_collisonPolygon.GetCircle().center = glm::vec2(m_pos.x,m_pos.y);
@@ -75,7 +79,7 @@ void SpaceShip::Render(IRenderer& renderer)
 	{
 		float w = m_collisonPolygon.GetCircle().r * 2;
 		glm::mat4 T = glm::translate(m_pos);
-		T = glm::rotate(T,glm::radians(m_fAngle),glm::vec3(0,0,1));
+		T = glm::rotate(T,m_fAngle,glm::vec3(0,0,1));
 		T = glm::scale(T,glm::vec3(w,w,1.0f));
 
 		glm::vec4 color = m_bCollison ? glm::vec4(0.9f,0.3f,0.3f,1.0f) : glm::vec4(1.0f);
@@ -84,6 +88,11 @@ void SpaceShip::Render(IRenderer& renderer)
 
 		m_gui.Render(renderer);
 	}
+}
+
+void SpaceShip::MoveTo(const glm::vec3 &target)
+{
+	m_target = target;
 }
 
 
