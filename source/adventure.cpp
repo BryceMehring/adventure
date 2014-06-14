@@ -145,10 +145,8 @@ void adventure::Update(Game& game)
 		int width, height;
 		renderer.GetDisplayMode(&width, &height);
 
-		float depth = renderer.ReadPixels(glm::ivec2(width / 2, height / 2));
-
-		glm::vec3 unprojectedMin = m_camera.UnProject(glm::vec3(m_Min, depth), glm::vec4(0.0f, 0.0f, width, height));
-		glm::vec3 unprojectedMax = m_camera.UnProject(glm::vec3(m_Max, depth), glm::vec4(0.0f, 0.0f, width, height));
+		glm::vec3 unprojectedMin = m_camera.UnProjectWS(glm::vec3(m_Min, -99), glm::vec4(0.0f, 0.0f, width, height));
+		glm::vec3 unprojectedMax = m_camera.UnProjectWS(glm::vec3(m_Max, -99), glm::vec4(0.0f, 0.0f, width, height));
 
 		Math::CRectangle collisionRect(Math::FRECT(glm::vec2(unprojectedMin.x, unprojectedMax.y), glm::vec2(unprojectedMax.x, unprojectedMin.y)));
 
@@ -214,7 +212,7 @@ void adventure::Draw(Game& game)
 
 	if(m_drawSelectionQuad)
 	{
-		glm::mat4 transformation = glm::translate(glm::vec3((m_Min + m_Max) / 2,0.0f));
+		glm::mat4 transformation = glm::translate(glm::vec3((m_Min + m_Max) / 2, 0));
 		transformation = glm::scale(transformation, glm::vec3(m_Max.x - m_Min.x, m_Max.y - m_Min.y, 1.0f));
 		renderer.DrawSprite(transformation, glm::vec4(1.0f,0.0f,0.0f,0.5f));
 	}
