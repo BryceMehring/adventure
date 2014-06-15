@@ -73,6 +73,10 @@ bool SpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 		m_collisonPolygon.GetCircle().center = glm::vec2(m_pos.x,m_pos.y);
 		tree.Insert(*this);
 	}
+	else
+	{
+		Destroy();
+	}
 
 	return m_iHealth <= 0;
 }

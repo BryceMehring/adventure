@@ -110,19 +110,19 @@ void adventure::Update(Game& game)
 	// Update the camera with user input
 	if(input.KeyPress(KEY_UP, false) || (float)cursorPos.y > 0.9f*height)
 	{
-		m_cameraPos.y += 200.0f * game.GetDt();
+		m_cameraPos.y += 400.0f * game.GetDt();
 	}
 	if(input.KeyPress(KEY_DOWN, false) || (float)cursorPos.y < 0.1f*height)
 	{
-		m_cameraPos.y += -200.0f * game.GetDt();
+		m_cameraPos.y += -400.0f * game.GetDt();
 	}
 	if(input.KeyPress(KEY_LEFT, false) || (float)cursorPos.x < 0.1f*width)
 	{
-		m_cameraPos.x += -200.0f * game.GetDt();
+		m_cameraPos.x += -400.0f * game.GetDt();
 	}
 	if(input.KeyPress(KEY_RIGHT, false) || (float)cursorPos.x > 0.9f*width)
 	{
-		m_cameraPos.x += 200.0f * game.GetDt();
+		m_cameraPos.x += 400.0f * game.GetDt();
 	}
 
 	m_cameraPos.z += -30*input.MouseZ();
@@ -138,6 +138,7 @@ void adventure::Update(Game& game)
 		if(bDead)
 		{
 			m_deathAnimation.push_back(std::make_pair((*iter)->GetPos(),SpriteAnimation(90,30)));
+			m_selectedObjects.erase(&(**iter));
 
 			m_quadTree.Erase(**iter);
 			iter = m_enemies.erase(iter);
@@ -235,7 +236,7 @@ void adventure::Draw(Game& game)
 
 	for(auto& iter : m_deathAnimation)
 	{
-		glm::mat4 T = glm::translate(iter.first);
+		glm::mat4 T = glm::translate(glm::vec3(iter.first.x, iter.first.y, -90));
 		T = glm::scale(T,glm::vec3(200.0f,200.0f,1.0f));
 
 		renderer.DrawSprite("explosion",T,glm::vec4(1.0f,1.0f,1.0f,0.9f),glm::vec2(1),iter.second.GetTile());
