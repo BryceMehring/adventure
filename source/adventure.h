@@ -51,10 +51,7 @@ private:
 
 	QuadTree m_quadTree;
 	UI::GUI m_gui;
-	UI::ProgressBar* m_pProgressBar;
 	bool m_bRenderQuadTree;
-
-	unsigned int creatureCount;
 
 	std::set<ISpatialObject*> m_selectedObjects;
 

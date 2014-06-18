@@ -4,7 +4,7 @@
 #include <glm/gtx/transform.hpp>
 
 SpaceShipBeam::SpaceShipBeam(const glm::vec3& pos, float dir, float speed) :
-	m_pos(pos), m_dir(dir), m_speed(speed), m_age(0), m_collisionPoly(Math::Circle(glm::vec2(pos.x,pos.y),7.0f)), m_bDestroyed(false), m_animation(2,40.0)
+	m_pos(pos), m_collisionPoly(Math::Circle(glm::vec2(pos.x,pos.y),7.0f)), m_animation(2,40.0), m_speed(speed), m_dir(dir), m_age(0), m_bDestroyed(false)
 {
 }
 

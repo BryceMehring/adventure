@@ -6,7 +6,7 @@
 
 void callback() {}
 
-AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : SpaceShip(str,tile,s,pos), m_fTime(0.0f)
+AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : SpaceShip(str,tile,s,pos)
 {
 	m_fSpeed = glm::linearRand(50.0f,100.0f);
 	m_fAngle = glm::linearRand(0.0f,360.0f);
@@ -22,7 +22,7 @@ bool AISpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 	return SpaceShip::Update(dt,cam,tree);
 }
 
-SquidSpaceShip::SquidSpaceShip(const std::string& str, unsigned int tile, float s,const glm::vec3& pos) : AISpaceShip(str,tile, s,pos)
+SquidSpaceShip::SquidSpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : AISpaceShip(str,tile, s,pos)
 {
 	m_dt = 0;
 	m_direction = 0;
