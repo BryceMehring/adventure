@@ -11,6 +11,7 @@
 #include <vector>
 #include <deque>
 #include <memory>
+#include <set>
 
 class adventure : public IGameState
 {

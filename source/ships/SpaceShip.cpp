@@ -24,6 +24,27 @@ SpaceShip::~SpaceShip()
 	//m_pProgressBar->Release();
 }
 
+const glm::vec3& SpaceShip::GetPos() const
+{
+	return m_pos;
+}
+
+glm::vec3 SpaceShip::GetDir() const
+{
+	glm::vec3 diff = m_target - m_pos;
+	if(diff != glm::vec3())
+	{
+		diff = glm::normalize(diff);
+	}
+
+	return diff;
+}
+
+float SpaceShip::GetRadius() const
+{
+	return m_collisonPolygon.GetCircle().r;
+}
+
 void* SpaceShip::QueryInterface(unsigned int i) const
 {
 	if(i == IDestroyable::INTERFACE_DESTROY)
@@ -52,8 +73,8 @@ void SpaceShip::PrepareToDie()
 
 bool SpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 {
-	glm::vec3 posDiff = m_target - m_pos;
-	glm::vec3 newPos = m_pos + posDiff * dt;
+	glm::vec3 posDiff = GetDir();
+	glm::vec3 newPos = m_pos + posDiff * m_fSpeed * dt;
 
 	m_bVisable = cam.IsVisible(glm::vec3(m_pos.x - 50.0f,m_pos.y - 50.0f,-100.0f),glm::vec3(m_pos.x + 50.0f,m_pos.y + 50.0f,-100.0f));
 
@@ -73,10 +94,10 @@ bool SpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 		m_collisonPolygon.GetCircle().center = glm::vec2(m_pos.x,m_pos.y);
 		tree.Insert(*this);
 	}
-	else
+	/*else
 	{
 		Destroy();
-	}
+	}*/
 
 	return m_iHealth <= 0;
 }
@@ -102,16 +123,4 @@ void SpaceShip::MoveTo(const glm::vec3 &target)
 {
 	m_target = target;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

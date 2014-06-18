@@ -64,7 +64,7 @@ void adventure::Init(Game& game)
 	m_enemies.reserve(500);
 
 	// ships
-	for(unsigned int i = 0; i < 1000; ++i)
+	for(unsigned int i = 0; i < 500; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
@@ -72,16 +72,6 @@ void adventure::Init(Game& game)
 
 		m_quadTree.Insert(*m_enemies.back());
 	}
-
-	//Squid
-	/*for (unsigned int i = 0; i < 500; ++i)
-	{
-		glm::vec3 pos = glm::vec3(glm::diskRand(6000.0f),-100.0f);
-		unsigned int shipTile = 3;
-		m_enemies.push_back(std::auto_ptr<SpaceShip>(new SquidSpaceShip("squid",shipTile,20.0f,pos)));
-
-		m_quadTree.Insert(*m_enemies.back());
-	}*/
 
 	game.GetRenderer().SetClearColor(glm::vec3(0.01,0.01,0.1));
 
@@ -108,19 +98,19 @@ void adventure::Update(Game& game)
 	const glm::ivec2& cursorPos = input.GetCursorPos();
 
 	// Update the camera with user input
-	if(input.KeyPress(KEY_UP, false) || (float)cursorPos.y > 0.9f*height)
+	if(input.KeyPress(KEY_UP, false) || (float)cursorPos.y > 0.95f*height)
 	{
 		m_cameraPos.y += 400.0f * game.GetDt();
 	}
-	if(input.KeyPress(KEY_DOWN, false) || (float)cursorPos.y < 0.1f*height)
+	if(input.KeyPress(KEY_DOWN, false) || (float)cursorPos.y < 0.05f*height)
 	{
 		m_cameraPos.y += -400.0f * game.GetDt();
 	}
-	if(input.KeyPress(KEY_LEFT, false) || (float)cursorPos.x < 0.1f*width)
+	if(input.KeyPress(KEY_LEFT, false) || (float)cursorPos.x < 0.05f*width)
 	{
 		m_cameraPos.x += -400.0f * game.GetDt();
 	}
-	if(input.KeyPress(KEY_RIGHT, false) || (float)cursorPos.x > 0.9f*width)
+	if(input.KeyPress(KEY_RIGHT, false) || (float)cursorPos.x > 0.95f*width)
 	{
 		m_cameraPos.x += 400.0f * game.GetDt();
 	}
@@ -194,7 +184,7 @@ void adventure::Update(Game& game)
 
 		for(auto unit : m_selectedObjects)
 		{
-			SpaceShip* pShip = static_cast<SpaceShip*>(unit);
+			SpaceShip* pShip = static_cast<SpaceShip*>(unit->QueryInterface(SpaceShip::INTERFACE_SPACESHIP));
 			if(pShip != nullptr)
 			{
 				pShip->MoveTo(worldPos);

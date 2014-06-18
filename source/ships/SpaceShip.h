@@ -17,23 +17,22 @@ class SpaceShip : public ISpatialObject, public IDestroyable
 public:
 
 	SpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
-	~SpaceShip();
+	virtual ~SpaceShip();
 
-	virtual const glm::vec3& GetPos() const { return m_pos; }
-	virtual glm::vec2 GetDir() const { return glm::vec2(0.0f); }
-	virtual float GetSpeed() const { return m_fSpeed; }
-	float GetRadius() const { return m_collisonPolygon.GetCircle().r; }
+	const glm::vec3& GetPos() const override;
+	glm::vec3 GetDir() const;
+	float GetRadius() const;
 
-	virtual void* QueryInterface(unsigned int) const;
+	void* QueryInterface(unsigned int) const override;
 
-	virtual const Math::ICollisionPolygon& GetCollisionPolygon() const;
+	const Math::ICollisionPolygon& GetCollisionPolygon() const override;
 
 	virtual bool Update(float dt, Camera&, QuadTree& tree);
 	virtual void Render(class IRenderer&);
 
 	void MoveTo(const glm::vec3& target);
 
-	virtual void Destroy();
+	void Destroy() override;
 
 	static const unsigned int INTERFACE_SPACESHIP = 4272475246;
 
