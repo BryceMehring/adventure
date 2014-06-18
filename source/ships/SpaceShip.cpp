@@ -73,8 +73,15 @@ void SpaceShip::PrepareToDie()
 
 bool SpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 {
+	float speed = m_fSpeed;
+	float d = glm::distance(m_target, m_pos);
+	if(d < 100)
+	{
+		speed *= (d / 100.0f);
+	}
+
 	glm::vec3 posDiff = GetDir();
-	glm::vec3 newPos = m_pos + posDiff * m_fSpeed * dt;
+	glm::vec3 newPos = m_pos + posDiff * speed * dt;
 
 	m_bVisable = cam.IsVisible(glm::vec3(m_pos.x - 50.0f,m_pos.y - 50.0f,-100.0f),glm::vec3(m_pos.x + 50.0f,m_pos.y + 50.0f,-100.0f));
 
