@@ -1,12 +1,11 @@
 #output dir
 bin/
 
-#Game Engine shared libs
-*.plug
+GameLog.txt
+VideoModes.txt
 
 # windows
 *.exe
-*.db
 
 # Compiled Object files
 *.slo
@@ -17,6 +16,7 @@ bin/
 *.so
 *.dylib
 *.dll
+*.plug
 
 # Compiled Static libraries
 *.lai
@@ -25,18 +25,13 @@ bin/
 *.lib
 
 #cmake
-*.rule
-*.stamp
-*.depend
-*.bin
-*.list
-*.check_cache
-*.ilk
-*.cbp
 CMakeCache.txt
-cmake_install.cmake
-CMakeFiles/
+CMakeFiles
 Makefile
+cmake_install.cmake
+install_manifest.txt
+*.cbp
+*CPack*
 
 #visual studio
 *.vcxproj
@@ -54,8 +49,35 @@ Makefile
 *.sdf
 *.pdb
 *.cxx
+*.unsuccessfulbuild
+*.vspx
 *.exp
+*.ilk
+*.psess
+*.etl
 
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 #other
 stats.txt
