@@ -25,7 +25,7 @@ extern "C" EXPORT IPlugin* CreatePlugin()
 	return new adventure();
 }
 
-adventure::adventure() : m_quadTree(Math::FRECT(glm::vec2(-10000,10000),glm::vec2(10000,-10000)),32), m_bRenderQuadTree(false)
+adventure::adventure() : m_quadTree(Math::FRECT(glm::vec2(-8000,8000),glm::vec2(8000,-8000)),32), m_bRenderQuadTree(false)
 {
 }
 adventure::~adventure()
@@ -64,7 +64,7 @@ void adventure::Init(Game& game)
 	m_enemies.reserve(500);
 
 	// ships
-	for(unsigned int i = 0; i < 500; ++i)
+	for(unsigned int i = 0; i < 1000; ++i)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
@@ -192,6 +192,18 @@ void adventure::Update(Game& game)
 		}
 	}
 
+	if(input.KeyPress(KEY_DELETE, false))
+	{
+		for(auto unit : m_selectedObjects)
+		{
+			IDestroyable* pDestroyable = static_cast<IDestroyable*>(unit->QueryInterface(SpaceShip::INTERFACE_DESTROY));
+			if(pDestroyable != nullptr)
+			{
+				pDestroyable->Destroy();
+			}
+		}
+	}
+
 	if(input.KeyPress(KEY_F1))
 	{
 		m_bRenderQuadTree = !m_bRenderQuadTree;
@@ -209,10 +221,10 @@ void adventure::Draw(Game& game)
 	int zPos = -400;
 
 	//Draws layers of stars
-	for(int i = 0; i < 5; ++i)
+	for(int i = 0; i < 6; ++i)
 	{
 		glm::mat4 T = glm::translate(glm::vec3(0.0f,0.0f,(float)zPos));
-		T = glm::scale(T,glm::vec3(8000.0f,8000.0f,1.0f));
+		T = glm::scale(T,glm::vec3(10000.0f,10000.0f,1.0f));
 		renderer.DrawSprite("stars",T,glm::vec4(1.0f),glm::vec2(40.0f /(i + 1),40.0f / (i + 1))); // 15
 
 		zPos += 30;
@@ -237,7 +249,7 @@ void adventure::Draw(Game& game)
 		SpaceShip* pShip = static_cast<SpaceShip*>(iter->QueryInterface(SpaceShip::INTERFACE_SPACESHIP));
 		if(pShip != nullptr)
 		{
-			renderer.DrawCircle(pShip->GetPos(), pShip->GetRadius(), 2.0f, 40.0f, glm::vec4(0.2f,0.4f,0.6f, 0.7f));
+			renderer.DrawCircle(pShip->GetPos(), pShip->GetRadius(), 1.0f, 72, glm::vec4(0.2f,0.4f,0.6f, 0.7f));
 		}
 	}
 

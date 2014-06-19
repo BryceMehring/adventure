@@ -20,8 +20,10 @@ public:
 	virtual ~SpaceShip();
 
 	const glm::vec3& GetPos() const override;
-	glm::vec3 GetDir() const;
+	const glm::vec3& GetDir() const;
 	float GetRadius() const;
+	float GetSpeed() const;
+	void SetSpeed(float speed);
 
 	void* QueryInterface(unsigned int) const override;
 
@@ -41,7 +43,9 @@ protected:
 	std::string m_sprite;
 
 	glm::vec3 m_pos;
+	glm::vec3 m_velocity;
 	glm::vec3 m_target;
+	bool m_bMoveToTarget;
 
 	Math::CCircle m_collisonPolygon;
 	unsigned int m_tile;
@@ -53,6 +57,7 @@ protected:
 	UI::GUI m_gui;
 	UI::ProgressBar* m_pProgressBar;
 
+	void WrapIfNeeded(const Math::FRECT& R);
 
 	void PrepareToDie();
 

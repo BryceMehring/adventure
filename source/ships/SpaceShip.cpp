@@ -2,9 +2,11 @@
 #include "IRenderer.h"
 #include "Camera.h"
 #include <glm/gtx/transform.hpp>
+#include <glm/gtc/random.hpp>
 #include <sstream>
 
-SpaceShip::SpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : m_sprite(str), m_pos(pos), m_target(pos), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),s)),
+SpaceShip::SpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) :
+	m_sprite(str), m_pos(pos), m_target(pos), m_bMoveToTarget(false), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),s)),
 	m_tile(tile), m_fAngle(0.0f), m_fSpeed(50.0f), m_bVisable(false), m_bCollison(false), m_iHealth(3)
 {
 	//UI::Menu* pMenu = new UI::Menu();
@@ -17,6 +19,9 @@ SpaceShip::SpaceShip(const std::string& str, unsigned int tile, float s, const g
 	m_pProgressBar->SetProgress(0.5f);*/
 
 	//m_gui.SetMenu(pMenu);
+
+	m_velocity = glm::linearRand(glm::vec3(-1.0f), glm::vec3(1.0f));
+	m_target = m_pos;
 }
 
 SpaceShip::~SpaceShip()
@@ -29,20 +34,23 @@ const glm::vec3& SpaceShip::GetPos() const
 	return m_pos;
 }
 
-glm::vec3 SpaceShip::GetDir() const
+const glm::vec3& SpaceShip::GetDir() const
 {
-	glm::vec3 diff = m_target - m_pos;
-	if(diff != glm::vec3())
-	{
-		diff = glm::normalize(diff);
-	}
-
-	return diff;
+	return m_velocity;
 }
 
 float SpaceShip::GetRadius() const
 {
 	return m_collisonPolygon.GetCircle().r;
+}
+
+float SpaceShip::GetSpeed() const
+{
+	return m_fSpeed;
+}
+void SpaceShip::SetSpeed(float speed)
+{
+	m_fSpeed = speed;
 }
 
 void* SpaceShip::QueryInterface(unsigned int i) const
@@ -65,46 +73,16 @@ void SpaceShip::Destroy()
 {
 	m_iHealth -= 1;
 }
-
-void SpaceShip::PrepareToDie()
-{
-	//m_bDrawDeath = true;
-}
-
 bool SpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 {
-	float speed = m_fSpeed;
-	float d = glm::distance(m_target, m_pos);
-	if(d < 100)
-	{
-		speed *= (d / 100.0f);
-	}
+	WrapIfNeeded(tree.GetRect());
 
-	glm::vec3 posDiff = GetDir();
-	glm::vec3 newPos = m_pos + posDiff * speed * dt;
+	tree.Erase(*this);
+	m_collisonPolygon.GetCircle().center = glm::vec2(m_pos.x,m_pos.y);
+	tree.Insert(*this);
 
 	m_bVisable = cam.IsVisible(glm::vec3(m_pos.x - 50.0f,m_pos.y - 50.0f,-100.0f),glm::vec3(m_pos.x + 50.0f,m_pos.y + 50.0f,-100.0f));
-
-	m_fAngle = atan2(posDiff.y, posDiff.x) + glm::radians(-90.0f);
-
-	Math::CCircle tempCircle = m_collisonPolygon;
-	tempCircle.GetCircle().center = glm::vec2(newPos.x,newPos.y);
-
-	std::vector<ISpatialObject*> nearObjects;
-	tree.QueryNearObjects(tempCircle, nearObjects);
-
-	if(nearObjects.size() <= 1)
-	{
-		m_pos = newPos;
-
-		tree.Erase(*this);
-		m_collisonPolygon.GetCircle().center = glm::vec2(m_pos.x,m_pos.y);
-		tree.Insert(*this);
-	}
-	/*else
-	{
-		Destroy();
-	}*/
+	m_fAngle = atan2(m_velocity.y, m_velocity.x) + glm::radians(-90.0f);
 
 	return m_iHealth <= 0;
 }
@@ -129,5 +107,34 @@ void SpaceShip::Render(IRenderer& renderer)
 void SpaceShip::MoveTo(const glm::vec3 &target)
 {
 	m_target = target;
+	m_target.z = m_pos.z;
+
+	m_bMoveToTarget = true;
+}
+
+void SpaceShip::WrapIfNeeded(const Math::FRECT& R)
+{
+	if(m_pos.x > R.bottomRight.x)
+	{
+		m_pos.x = R.topLeft.x;
+	}
+	else if(m_pos.x < R.topLeft.x)
+	{
+		m_pos.x = R.bottomRight.x;
+	}
+
+	if(m_pos.y > R.topLeft.y)
+	{
+		m_pos.y = R.bottomRight.y;
+	}
+	else if(m_pos.y < R.bottomRight.y)
+	{
+		m_pos.y = R.topLeft.y;
+	}
+}
+
+void SpaceShip::PrepareToDie()
+{
+	//m_bDrawDeath = true;
 }
 
