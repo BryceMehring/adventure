@@ -52,14 +52,16 @@ void adventure::BuildGUI()
 // Called only once when the plugin is created
 void adventure::Init(Game& game)
 {
+	IRenderer& renderer = game.GetRenderer();
+
 	int width;
 	int height;
-	game.GetRenderer().GetDisplayMode(&width,&height);
+	renderer.GetDisplayMode(&width, &height);
 	m_camera.SetLens(90.0f, (float)width, (float)height, 0.1f, 7000.0f);
 	m_camera.LookAt(glm::vec3(0.0f,0.0f,99.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
 	m_camera.Update();
 
-	game.GetRenderer().SetCamera(&m_camera);
+	renderer.SetCamera(&m_camera);
 
 	m_enemies.reserve(500);
 
@@ -68,14 +70,15 @@ void adventure::Init(Game& game)
 	{
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
-		m_enemies.push_back(std::auto_ptr<SpaceShip>(new AISpaceShip("ship",shipTile,30 + rand() % 50,pos)));
 
-		m_quadTree.Insert(*m_enemies.back());
+		SpaceShip* pShip = new AISpaceShip("ship", shipTile, 30 + rand() % 50, pos);
+
+		m_enemies.emplace_back(pShip);
+		m_quadTree.Insert(*pShip);
 	}
 
-	game.GetRenderer().SetClearColor(glm::vec3(0.01,0.01,0.1));
-
-	game.GetRenderer().EnableVSync(false);
+	renderer.SetClearColor(glm::vec3(0.01, 0.01, 0.1));
+	renderer.EnableVSync(false);
 
 	BuildGUI();
 }

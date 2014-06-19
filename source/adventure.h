@@ -43,7 +43,7 @@ public:
 
 private:
 
-	std::vector<std::auto_ptr<SpaceShip>> m_enemies;
+	std::vector<std::unique_ptr<SpaceShip>> m_enemies;
 	std::deque<std::pair<glm::vec3,SpriteAnimation>> m_deathAnimation;
 
 	PerspectiveCamera m_camera;

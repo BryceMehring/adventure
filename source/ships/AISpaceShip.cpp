@@ -9,7 +9,6 @@ void callback() {}
 AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : SpaceShip(str,tile,s,pos)
 {
 	m_fSpeed = glm::linearRand(200.0f,400.0f);
-	m_fAngle = glm::linearRand(0.0f,360.0f);
 }
 
 bool AISpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
