@@ -259,13 +259,13 @@ void adventure::Draw(Game& game)
 	}
 
 	std::ostringstream converter;
-	converter << "Number of enemies: " <<this->m_enemies.size();
+	converter << "Number of enemies: " <<this->m_enemies.size() << std::endl;
+	converter << "Selected objects: " << this->m_selectedObjects.size();
 	renderer.SetRenderSpace(RenderSpace::Screen);
-	renderer.DrawString(converter.str().c_str(),glm::vec3(0.0f,100.0f,-10.0f));
 
-	converter.str("");
-	converter << "Selected objects: " << this->m_selectedObjects.size() << std::endl;
-	renderer.DrawString(converter.str().c_str(), glm::vec3(600.0f, 200.0f, -10.0f));
+	int width, height;
+	renderer.GetDisplayMode(&width, &height);
+	renderer.DrawString(converter.str().c_str(),glm::vec3(width / 2,height,-10.0f), 50.0f, glm::vec4(1.0f), nullptr, FontAlignment::Center);
 
 	if(m_drawSelectionQuad)
 	{
