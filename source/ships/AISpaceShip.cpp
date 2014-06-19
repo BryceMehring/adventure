@@ -132,15 +132,17 @@ glm::vec3 AISpaceShip::SteerTo(const glm::vec3 &target)
 
 		if(d < 100.0f)
 		{
-			desired *= 5.0f * d / 100.0f;
+			desired *= d / 100.0f;
 		}
 		else
 		{
-			desired *= 5.0f;
+			//desired *= 5.0f;
 		}
 
 		steer = desired - m_velocity;
 	}
+
+	LimitVector(steer, 2.0f);
 
 	return steer;
 }
