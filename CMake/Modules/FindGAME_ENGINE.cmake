@@ -2,7 +2,7 @@
 #find GAME_ENGINE
 
 find_path(GAME_ENGINE_INCLUDE_DIR IGameState.h
-	"${CMAKE_SOURCE_DIR}/../GameEngine/GameEngine"
+        "${CMAKE_SOURCE_DIR}/../GameEngine/interfaces"
 	)
 	
 find_library(GAME_ENGINE_LIB NAMES GameEngine PATHS "${CMAKE_SOURCE_DIR}/../GameEngine/bin")
