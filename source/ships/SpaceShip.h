@@ -49,7 +49,6 @@ protected:
 
 	Math::CCircle m_collisonPolygon;
 	unsigned int m_tile;
-	float m_fAngle;
 	float m_fSpeed;
 	bool m_bVisable;
 	bool m_bCollison;
