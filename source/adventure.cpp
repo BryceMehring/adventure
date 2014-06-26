@@ -63,7 +63,7 @@ void adventure::Init(Game& game)
 
 	renderer.SetCamera(&m_camera);
 
-	m_enemies.reserve(500);
+	m_enemies.reserve(1000);
 
 	// ships
 	for(unsigned int i = 0; i < 1000; ++i)
@@ -247,12 +247,23 @@ void adventure::Draw(Game& game)
 		renderer.DrawSprite("explosion",T,glm::vec4(1.0f,1.0f,1.0f,0.9f),glm::vec2(1),iter.second.GetTile());
 	}
 
+	static float angle = 0.0f;
+	angle += 10.0f * game.GetDt();
+
+	glm::mat4 rotMatrix = glm::rotate(glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+
 	for(auto& iter : m_selectedObjects)
 	{
 		SpaceShip* pShip = static_cast<SpaceShip*>(iter->QueryInterface(SpaceShip::INTERFACE_SPACESHIP));
 		if(pShip != nullptr)
 		{
-			renderer.DrawCircle(pShip->GetPos(), pShip->GetRadius(), 1.0f, 72, glm::vec4(0.2f,0.4f,0.6f, 0.7f));
+			float R = pShip->GetRadius() * 3;
+
+			glm::mat4 T = glm::translate(pShip->GetPos());
+			T *= rotMatrix;
+			T = glm::scale(T, glm::vec3(R, R, 1.0f));
+
+			renderer.DrawSprite("dashed_circle", T, glm::vec4(0.2f, 0.4f, 0.6f, 0.3f), glm::vec2(1.0f), 0, "dashed_circle_shader");
 		}
 	}
 
