@@ -183,7 +183,7 @@ void adventure::Draw(Game& game)
 
 	int width, height;
 	renderer.GetDisplayMode(&width, &height);
-	renderer.DrawString(converter.str().c_str(),glm::vec3(width / 2,height,-10.0f), 50.0f, glm::vec4(1.0f), nullptr, FontAlignment::Center);
+	renderer.DrawString(converter.str().c_str(),glm::vec3(width / 2,height,-10.0f), glm::vec4(1.0f), 50.0f, nullptr, FontAlignment::Center);
 
 	if(m_drawSelectionQuad)
 	{
@@ -233,7 +233,7 @@ void adventure::UpdateUserInput(Game& game)
 	const glm::ivec2& cursorPos = input.GetCursorPos();
 
 	// Update the camera with user input
-	if(input.KeyPress(KEY_UP, false) || (float)cursorPos.y > 0.95f*height)
+	if(input.KeyPress(KEY_UP, false) || ((float)cursorPos.y > 0.95f*height && cursorPos.x < 0.75*width))
 	{
 		m_cameraPos.y += 400.0f * dt;
 	}
@@ -333,7 +333,10 @@ void adventure::BuildGUI(Game& game)
 	m_rootNode = m_gui.CreateNode();
 	m_gui.SetNode(m_rootNode);
 
-	auto pToggleButton = UI::GUIFactory<UI::Button>::CreateElement(game, glm::vec2(900), glm::vec3(1.0f), glm::vec3(1.0f, 0.0f, 0.0f),
+	Math::FRECT R;
+	renderer.GetStringRect("Toggle Options", 50.0f, FontAlignment::Left, R);
+
+	auto pToggleButton = UI::GUIFactory<UI::Button>::CreateElement(game, glm::vec2(width - R.Width(), height), glm::vec4(0.0f,0.0f,0.0f,0.5f), glm::vec4(1.0f, 0.0f, 0.0f,0.5f),
 										 50.0f, "Toggle Options", std::bind(&adventure::ToggleCallback, this, _1));
 
 	m_gui.AddElement(m_rootNode, pToggleButton);
