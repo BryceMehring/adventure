@@ -8,11 +8,10 @@
 
 #include "ships/AISpaceShip.h"
 
-#include <sstream>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/random.hpp>
-
 #include <functional>
+#include <sstream>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -25,7 +24,7 @@ extern "C" EXPORT IPlugin* CreatePlugin()
 	return new adventure();
 }
 
-adventure::adventure() : m_quadTree(Math::FRECT(glm::vec2(-8000,8000),glm::vec2(8000,-8000)),32), m_bRenderQuadTree(false)
+adventure::adventure() : m_quadTree(Math::FRECT(glm::vec2(-8000,8000),glm::vec2(8000,-8000)),64), m_bRenderQuadTree(false)
 {
 }
 adventure::~adventure()
@@ -118,7 +117,7 @@ void adventure::Update(Game& game)
 		m_cameraPos.x += 400.0f * game.GetDt();
 	}
 
-	m_cameraPos.z += -30*input.MouseZ();
+	m_cameraPos.z += -100*input.MouseZ();
 
 	m_camera.LookAt(m_cameraPos, glm::vec3(m_cameraPos.x, m_cameraPos.y, 0.0f));
 	m_camera.Update();
@@ -285,7 +284,18 @@ void adventure::Draw(Game& game)
 	{
 		glm::mat4 transformation = glm::translate(glm::vec3((m_Min + m_Max) / 2, 0));
 		transformation = glm::scale(transformation, glm::vec3(m_Max.x - m_Min.x, m_Max.y - m_Min.y, 1.0f));
-		renderer.DrawSprite(transformation, glm::vec4(1.0f,0.0f,0.0f,0.5f));
+		renderer.DrawSprite(transformation, glm::vec4(0.0f,0.7f,0.0f,0.4f));
+
+		glm::vec3 linePos[5] =
+		{
+			glm::vec3(m_Min, 0),
+			glm::vec3(m_Min.x, m_Max.y, 0),
+			glm::vec3(m_Max, 0),
+			glm::vec3(m_Max.x, m_Min.y, 0),
+			glm::vec3(m_Min, 0)
+		};
+
+		renderer.DrawLine(linePos, 5, 4.0f, glm::vec4(0.0f,0.75f,0.0f,0.8f));
 	}
 
 }
