@@ -4,9 +4,9 @@
 
 #include "IRenderer.h"
 
-float AISpaceShip::COHESION_WEIGHT = 4.0f;
-float AISpaceShip::ALIGNMENT_WEIGHT = 2.0f;
-float AISpaceShip::SEPARATION_WEIGHT = 10000.0f;
+float AISpaceShip::COHESION_WEIGHT = 0.0f;
+float AISpaceShip::ALIGNMENT_WEIGHT = 0.0f;
+float AISpaceShip::SEPARATION_WEIGHT = 0.0f;
 float AISpaceShip::MAX_FORCE = 4.0f;
 
 AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : SpaceShip(str,tile,s,pos)

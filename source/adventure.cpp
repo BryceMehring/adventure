@@ -245,7 +245,7 @@ void adventure::UpdateUserInput(Game& game)
 	{
 		m_cameraPos.x += -400.0f * dt;
 	}
-	if(input.KeyPress(KEY_RIGHT, false) || (float)cursorPos.x > 0.95f*width)
+	if(input.KeyPress(KEY_RIGHT, false) || ((float)cursorPos.x > 0.95f*width && cursorPos.y < 0.95*height))
 	{
 		m_cameraPos.x += 400.0f * dt;
 	}
@@ -336,7 +336,7 @@ void adventure::BuildGUI(Game& game)
 	Math::FRECT R;
 	renderer.GetStringRect("Toggle Options", 50.0f, FontAlignment::Left, R);
 
-	auto pToggleButton = UI::GUIFactory<UI::Button>::CreateElement(game, glm::vec2(width - R.Width(), height), glm::vec4(0.0f,0.0f,0.0f,0.5f), glm::vec4(1.0f, 0.0f, 0.0f,0.5f),
+	auto pToggleButton = UI::GUIFactory<UI::Button>::CreateElement(game, glm::vec2(width - R.Width() / 2.0f, height), glm::vec4(0.0f,0.0f,0.0f,0.5f), glm::vec4(1.0f, 0.0f, 0.0f,0.5f),
 										 50.0f, "Toggle Options", std::bind(&adventure::ToggleCallback, this, _1));
 
 	m_gui.AddElement(m_rootNode, pToggleButton);
@@ -344,12 +344,15 @@ void adventure::BuildGUI(Game& game)
 	m_optionsNode = m_gui.CreateNode();
 	m_gui.LinkNodes(m_optionsNode, m_rootNode);
 
-	auto pCohesionWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, 500.0f), glm::vec2(width - 50.0f, 500), 0.0f, 10.0f, 2,
+	auto pCohesionWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, height / 4), glm::vec2(width - 50.0f, height / 4), 0.0f, 10.0f, 2,
 														   "blank", "Cohesion Weight", AISpaceShip::SetCohesionWeight);
-	auto pAlignmentWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, 600.0f), glm::vec2(width - 50.0f, 600), 0.0f, 10.0f, 2,
+	pCohesionWeightBar->SetValue(4.0f);
+	auto pAlignmentWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, height / 2), glm::vec2(width - 50.0f, height / 2), 0.0f, 10.0f, 2,
 															"blank", "Alignment Weight", AISpaceShip::SetAlignmentWeight);
-	auto pSeperationWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, 700.0f), glm::vec2(width - 50.0f, 700), 0.0f, 10000.0f, 2,
+	pAlignmentWeightBar->SetValue(2.0f);
+	auto pSeperationWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, 3 * height / 4), glm::vec2(width - 50.0f, 3 * height / 4), 0.0f, 10000.0f, 2,
 															 "blank", "Seperation Weight", AISpaceShip::SetSeperationWeight);
+	pSeperationWeightBar->SetValue(10000.0f);
 
 	m_gui.AddElement(m_optionsNode, pCohesionWeightBar);
 	m_gui.AddElement(m_optionsNode, pAlignmentWeightBar);
