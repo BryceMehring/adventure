@@ -11,6 +11,11 @@ public:
 
 	virtual bool Update(float dt, Camera& cam, QuadTree& tree);
 
+	static void SetCohesionWeight(float w);
+	static void SetAlignmentWeight(float w);
+	static void SetSeperationWeight(float w);
+	static void SetMaxForce(float w);
+
 private:
 
 	glm::vec3 Cohere(const std::vector<ISpatialObject*>& nearObjects);
@@ -19,6 +24,11 @@ private:
 	glm::vec3 SteerTo(const glm::vec3& target);
 
 	void LimitVector(glm::vec3 &vec, float length) const;
+
+	static float COHESION_WEIGHT;
+	static float ALIGNMENT_WEIGHT;
+	static float SEPARATION_WEIGHT;
+	static float MAX_FORCE;
 };
 
 #endif // _AISPACESHIP_

@@ -6,6 +6,7 @@
 #include "QuadTree.h"
 #include "GUI.h"
 #include "ProgressBar.h"
+#include "GUIFactory.h"
 #include "ships/SpaceShip.h"
 
 #include <vector>
@@ -41,16 +42,22 @@ public:
 	// Called every frame to render the game
 	virtual void Draw(Game& game);
 
+	void ToggleCallback(UI::Button& button);
+
 private:
+
+	void UpdateUserInput(Game&);
+
+	void BuildGUI(Game& game);
 
 	std::vector<std::unique_ptr<SpaceShip>> m_enemies;
 	std::deque<std::pair<glm::vec3,SpriteAnimation>> m_deathAnimation;
 
 	PerspectiveCamera m_camera;
-	glm::vec3 m_cameraPos = glm::vec3(0,0,99);
+	glm::vec3 m_cameraPos = glm::vec3(0,0,400);
+	float m_fCameraZVelocity = 0.0f;
 
 	QuadTree m_quadTree;
-	UI::GUI m_gui;
 	bool m_bRenderQuadTree;
 
 	std::set<ISpatialObject*> m_selectedObjects;
@@ -62,7 +69,11 @@ private:
 	glm::vec3 m_unprojectedMin;
 	glm::vec3 m_unprojectedMax;
 
-	void BuildGUI();
+	// GUI members
+	UI::GUI m_gui;
+	UI::GUI::HANDLE m_rootNode;
+	UI::GUI::HANDLE m_optionsNode;
+	bool m_bEnableOptionsMenu = false;
 
 };
 

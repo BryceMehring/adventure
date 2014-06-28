@@ -4,17 +4,20 @@
 
 #include "IRenderer.h"
 
-void callback() {}
+float AISpaceShip::COHESION_WEIGHT = 4.0f;
+float AISpaceShip::ALIGNMENT_WEIGHT = 2.0f;
+float AISpaceShip::SEPARATION_WEIGHT = 10000.0f;
+float AISpaceShip::MAX_FORCE = 4.0f;
 
 AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : SpaceShip(str,tile,s,pos)
 {
-	m_fSpeed = glm::linearRand(200.0f,400.0f);
+	m_fSpeed = glm::linearRand(500.0f,800.0f);
 }
 
 bool AISpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 {
 	Math::CCircle tempCircle = m_collisonPolygon;
-	tempCircle.GetCircle().r *= 4;
+	tempCircle.GetCircle().r *= 5;
 
 	std::vector<ISpatialObject*> nearObjects;
 	tree.QueryNearObjects(tempCircle, nearObjects);
@@ -33,9 +36,11 @@ bool AISpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 		}
 	}
 
-	glm::vec3 acceleration = Cohere(nearObjects) +
-							 Align(nearObjects) +
-							 Seperation(nearObjects) * 2000.0f + targetVector * 5.0f;
+	glm::vec3 acceleration = Cohere(nearObjects) * COHESION_WEIGHT +
+							 Align(nearObjects) * ALIGNMENT_WEIGHT +
+							 Seperation(nearObjects) * SEPARATION_WEIGHT +
+							 targetVector * 5.0f;
+
 	m_velocity += acceleration;
 	LimitVector(m_velocity, m_fSpeed);
 
@@ -43,6 +48,26 @@ bool AISpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 	m_pos.y += m_velocity.y * dt;
 
 	return SpaceShip::Update(dt,cam,tree);
+}
+
+void AISpaceShip::SetCohesionWeight(float w)
+{
+	COHESION_WEIGHT = w;
+}
+
+void AISpaceShip::SetAlignmentWeight(float w)
+{
+	ALIGNMENT_WEIGHT = w;
+}
+
+void AISpaceShip::SetSeperationWeight(float w)
+{
+	SEPARATION_WEIGHT = w;
+}
+
+void AISpaceShip::SetMaxForce(float w)
+{
+	MAX_FORCE = w;
 }
 
 glm::vec3 AISpaceShip::Cohere(const std::vector<ISpatialObject *> &nearObjects)
@@ -62,7 +87,6 @@ glm::vec3 AISpaceShip::Cohere(const std::vector<ISpatialObject *> &nearObjects)
 	if(count > 0)
 	{
 		sum = SteerTo(sum / (float)count);
-		LimitVector(sum, 10.0f);
 	}
 
 	return sum;
@@ -87,7 +111,7 @@ glm::vec3 AISpaceShip::Align(const std::vector<ISpatialObject *> &nearObjects)
 		mean /= (float)count;
 	}
 
-	LimitVector(mean, 10.0f);
+	LimitVector(mean, MAX_FORCE);
 
 	return mean;
 }
@@ -131,17 +155,16 @@ glm::vec3 AISpaceShip::SteerTo(const glm::vec3 &target)
 
 		if(d < 100.0f)
 		{
-			desired *= d / 100.0f;
+			desired *= m_fSpeed * d / 100.0f;
 		}
 		else
 		{
-			//desired *= 5.0f;
+			desired *= m_fSpeed;
 		}
 
 		steer = desired - m_velocity;
+		LimitVector(steer, MAX_FORCE);
 	}
-
-	LimitVector(steer, 2.0f);
 
 	return steer;
 }

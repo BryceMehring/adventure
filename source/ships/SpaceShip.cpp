@@ -9,7 +9,7 @@ SpaceShip::SpaceShip(const std::string& str, unsigned int tile, float s, const g
 	m_sprite(str), m_pos(pos), m_target(pos), m_bMoveToTarget(false), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),s)),
 	m_tile(tile), m_fSpeed(50.0f), m_bVisable(false), m_bCollison(false), m_iHealth(3)
 {
-	m_velocity = glm::linearRand(glm::vec3(-1.0f), glm::vec3(1.0f));
+	m_velocity = glm::linearRand(glm::vec3(-50.0f), glm::vec3(50.0f));
 }
 
 SpaceShip::~SpaceShip()
