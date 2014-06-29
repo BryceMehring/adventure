@@ -349,10 +349,10 @@ void adventure::BuildGUI(Game& game)
 
 	auto pCohesionWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, height / 4), glm::vec2(width - 50.0f, height / 4), 0.0f, 10.0f, 2,
 														   "blank", "Cohesion Weight", AISpaceShip::SetCohesionWeight);
-	pCohesionWeightBar->SetValue(4.0f);
+	pCohesionWeightBar->SetValue(3.0f);
 	auto pAlignmentWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, height / 2), glm::vec2(width - 50.0f, height / 2), 0.0f, 10.0f, 2,
 															"blank", "Alignment Weight", AISpaceShip::SetAlignmentWeight);
-	pAlignmentWeightBar->SetValue(2.0f);
+	pAlignmentWeightBar->SetValue(5.5f);
 	auto pSeperationWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, 3 * height / 4), glm::vec2(width - 50.0f, 3 * height / 4), 0.0f, 10000.0f, 2,
 															 "blank", "Seperation Weight", AISpaceShip::SetSeperationWeight);
 	pSeperationWeightBar->SetValue(10000.0f);
