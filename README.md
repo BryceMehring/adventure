@@ -3,7 +3,7 @@ adventure - A space adventure
 
 ##Controls
 
-###Game managment:
+###Game management:
 * ESC: change the game state to the plugin loader. If in the plugin loader, ESC will exit the game.
 * F1: toggle rendering of the quadtree
 * F5: toggle V-sync
