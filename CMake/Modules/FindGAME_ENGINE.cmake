@@ -1,18 +1,13 @@
 
 #find GAME_ENGINE
-if(JENKINS_BUILD)
-	list(APPEND GAME_ENGINE_INCLUDE_LIST "${CMAKE_SOURCE_DIR}/../GameEngineLinux")
-	list(APPEND GAME_ENGINE_INCLUDE_LIST "${CMAKE_SOURCE_DIR}/../GameEngineWindows")
-	
-	list(APPEND GAME_ENGINE_BIN_PATH "${CMAKE_SOURCE_DIR}/../GameEngineLinux/bin")
-	list(APPEND GAME_ENGINE_BIN_PATH "${CMAKE_SOURCE_DIR}/../GameEngineWindows/bin")
-else()
-	list(APPEND GAME_ENGINE_INCLUDE_LIST "${CMAKE_SOURCE_DIR}/../GameEngine")
-	
-	list(APPEND GAME_ENGINE_BIN_PATH "${CMAKE_SOURCE_DIR}/../GameEngine/bin")
-endif(JENKINS_BUILD)
 
-find_path(GAME_ENGINE_INCLUDE_DIR CMakeLists.txt ${GAME_ENGINE_INCLUDE_LIST})
+find_path(GAME_ENGINE_INCLUDE_DIR CMakeLists.txt "${CMAKE_SOURCE_DIR}/../GameEngine"
+												 "${CMAKE_SOURCE_DIR}/../GameEngineLinux"
+												 "${CMAKE_SOURCE_DIR}/../GameEngineWindows")
+
+list(APPEND GAME_ENGINE_BIN_PATH "${CMAKE_SOURCE_DIR}/../GameEngine/bin")
+list(APPEND GAME_ENGINE_BIN_PATH "${CMAKE_SOURCE_DIR}/../GameEngineLinux/bin")
+list(APPEND GAME_ENGINE_BIN_PATH "${CMAKE_SOURCE_DIR}/../GameEngineWindows/bin")
 
 find_library(GAME_ENGINE_LIB NAMES GameEngine PATHS ${GAME_ENGINE_BIN_PATH})
 find_library(GAME_ENGINE_COMMON_LIB NAMES common PATHS ${GAME_ENGINE_BIN_PATH})
