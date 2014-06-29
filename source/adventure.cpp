@@ -176,14 +176,17 @@ void adventure::Draw(Game& game)
 		m_quadTree.Render(renderer);
 	}
 
-	std::ostringstream converter;
-	converter << "Number of enemies: " <<this->m_enemies.size() << std::endl;
-	converter << "Selected objects: " << this->m_selectedObjects.size();
 	renderer.SetRenderSpace(RenderSpace::Screen);
 
-	int width, height;
-	renderer.GetDisplayMode(&width, &height);
-	renderer.DrawString(converter.str().c_str(),glm::vec3(width / 2,height,-10.0f), glm::vec4(1.0f), 50.0f, nullptr, FontAlignment::Center);
+	if (!m_selectedObjects.empty())
+	{
+		std::ostringstream converter;
+		converter << "Selected objects: " << m_selectedObjects.size();
+
+		int width, height;
+		renderer.GetDisplayMode(&width, &height);
+		renderer.DrawString(converter.str().c_str(), glm::vec3(width / 2, height, -10.0f), glm::vec4(1.0f), 50.0f, nullptr, FontAlignment::Center);
+	}
 
 	if(m_drawSelectionQuad)
 	{
