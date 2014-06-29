@@ -7,6 +7,7 @@
 float AISpaceShip::COHESION_WEIGHT = 0.0f;
 float AISpaceShip::ALIGNMENT_WEIGHT = 0.0f;
 float AISpaceShip::SEPARATION_WEIGHT = 0.0f;
+float AISpaceShip::USER_WEIGHT = 0.0f;
 float AISpaceShip::MAX_FORCE = 4.0f;
 
 AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : SpaceShip(str,tile,s,pos)
@@ -39,7 +40,7 @@ bool AISpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 	glm::vec3 acceleration = Cohere(nearObjects) * COHESION_WEIGHT +
 							 Align(nearObjects) * ALIGNMENT_WEIGHT +
 							 Seperation(nearObjects) * SEPARATION_WEIGHT +
-							 targetVector * 5.0f;
+							 targetVector * USER_WEIGHT;
 
 	m_velocity += acceleration;
 	LimitVector(m_velocity, m_fSpeed);
@@ -63,6 +64,11 @@ void AISpaceShip::SetAlignmentWeight(float w)
 void AISpaceShip::SetSeperationWeight(float w)
 {
 	SEPARATION_WEIGHT = w;
+}
+
+void AISpaceShip::SetUserWeight(float w)
+{
+	USER_WEIGHT = w;
 }
 
 void AISpaceShip::SetMaxForce(float w)

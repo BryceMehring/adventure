@@ -14,6 +14,7 @@ public:
 	static void SetCohesionWeight(float w);
 	static void SetAlignmentWeight(float w);
 	static void SetSeperationWeight(float w);
+	static void SetUserWeight(float w);
 	static void SetMaxForce(float w);
 
 private:
@@ -28,6 +29,7 @@ private:
 	static float COHESION_WEIGHT;
 	static float ALIGNMENT_WEIGHT;
 	static float SEPARATION_WEIGHT;
+	static float USER_WEIGHT;
 	static float MAX_FORCE;
 };
 
