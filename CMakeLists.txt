@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(adventure CXX)
 
-option(JENKINS_BUILD "Jenkins CI Build" OFF)
-
 set(ENGINE_VERSION_MAJOR 1)
 set(ENGINE_VERSION_MINOR 0)
 
