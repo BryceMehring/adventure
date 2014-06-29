@@ -1,6 +1,7 @@
 adventure - A space adventure
 =========
 
+
 ##Controls
 
 ###Game management:
@@ -15,6 +16,11 @@ adventure - A space adventure
 * Pressing the delete key while having units selected will be destroyed.
 
 ###Camera Movement:
+
 * The camera can zoom in and out by using the mouse scroll.
 * Arrow keys along with moving the mouse to the edge of the screen move the camera.
+
+##System Requirements
+
+* Video Card: OpenGL 3.3 support
 
