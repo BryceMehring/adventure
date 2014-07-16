@@ -13,7 +13,7 @@ public:
 
 	static void SetCohesionWeight(float w);
 	static void SetAlignmentWeight(float w);
-	static void SetSeperationWeight(float w);
+	static void SetSeparationWeight(float w);
 	static void SetUserWeight(float w);
 	static void SetMaxForce(float w);
 
@@ -21,7 +21,7 @@ private:
 
 	glm::vec3 Cohere(const std::vector<ISpatialObject*>& nearObjects);
 	glm::vec3 Align(const std::vector<ISpatialObject*>& nearObjects);
-	glm::vec3 Seperation(const std::vector<ISpatialObject*>& nearObjects);
+	glm::vec3 Separation(const std::vector<ISpatialObject*>& nearObjects);
 	glm::vec3 SteerTo(const glm::vec3& target);
 
 	void LimitVector(glm::vec3 &vec, float length) const;

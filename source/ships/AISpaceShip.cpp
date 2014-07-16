@@ -39,7 +39,7 @@ bool AISpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 
 	glm::vec3 acceleration = Cohere(nearObjects) * COHESION_WEIGHT +
 							 Align(nearObjects) * ALIGNMENT_WEIGHT +
-							 Seperation(nearObjects) * SEPARATION_WEIGHT +
+							 Separation(nearObjects) * SEPARATION_WEIGHT +
 							 targetVector * USER_WEIGHT;
 
 	m_velocity += acceleration;
@@ -61,7 +61,7 @@ void AISpaceShip::SetAlignmentWeight(float w)
 	ALIGNMENT_WEIGHT = w;
 }
 
-void AISpaceShip::SetSeperationWeight(float w)
+void AISpaceShip::SetSeparationWeight(float w)
 {
 	SEPARATION_WEIGHT = w;
 }
@@ -122,7 +122,7 @@ glm::vec3 AISpaceShip::Align(const std::vector<ISpatialObject *> &nearObjects)
 	return mean;
 }
 
-glm::vec3 AISpaceShip::Seperation(const std::vector<ISpatialObject *> &nearObjects)
+glm::vec3 AISpaceShip::Separation(const std::vector<ISpatialObject *> &nearObjects)
 {
 	glm::vec3 mean;
 	unsigned int count = 0;

@@ -358,7 +358,7 @@ void adventure::BuildGUI(Game& game)
 															"blank", "Alignment Weight", AISpaceShip::SetAlignmentWeight);
 	pAlignmentWeightBar->SetValue(5.5f);
 	auto pSeperationWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, 4 * height / 5), glm::vec2(width - 50.0f, 4 * height / 5), 0.0f, 10000.0f, 2,
-															 "blank", "Seperation Weight", AISpaceShip::SetSeperationWeight);
+															 "blank", "Separation Weight", AISpaceShip::SetSeparationWeight);
 	pSeperationWeightBar->SetValue(10000.0f);
 
 	m_gui.AddElement(m_optionsNode, pUserWeightBar);
