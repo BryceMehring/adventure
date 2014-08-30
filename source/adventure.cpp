@@ -173,7 +173,7 @@ void adventure::Draw(Game& game)
 
 	if(m_bRenderQuadTree)
 	{
-		m_quadTree.Render(renderer);
+		m_quadTree.Render(renderer, m_cameraPos.z / 100);
 	}
 
 	renderer.SetRenderSpace(RenderSpace::Screen);
