@@ -59,6 +59,7 @@ private:
 
 	QuadTree m_quadTree;
 	bool m_bRenderQuadTree;
+	bool m_bDisableColorClearing = true;
 
 	std::set<ISpatialObject*> m_selectedObjects;
 
@@ -68,6 +69,14 @@ private:
 
 	glm::vec3 m_unprojectedMin;
 	glm::vec3 m_unprojectedMax;
+
+	struct StarData
+	{
+		glm::vec2 offset;
+		float color;
+	};
+
+	std::vector<StarData> m_starOffsets;
 
 	// GUI members
 	UI::GUI m_gui;

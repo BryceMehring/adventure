@@ -54,14 +54,24 @@ void adventure::Init(Game& game)
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
 
-		SpaceShip* pShip = new AISpaceShip("ship", shipTile, 30 + rand() % 50, pos);
+		SpaceShip* pShip = new AISpaceShip("ship", shipTile, 30 + rand() % 100, pos);
 
 		m_enemies.emplace_back(pShip);
 		m_quadTree.Insert(*pShip);
 	}
 
+	// init star offsets
+	for (unsigned int i = 0; i < 10; ++i)
+	{
+		StarData data;
+		data.offset = glm::vec2(glm::linearRand(-1000.0f, 1000.0f));
+		data.color = (50 - i) / 40.0f; // 1 - 0
+
+		m_starOffsets.emplace_back(data);
+	}
+
 	renderer.SetClearColor(glm::vec3(0.01f, 0.01f, 0.1f));
-	renderer.EnableVSync(false);
+	renderer.EnableVSync(true);
 
 	BuildGUI(game);
 }
@@ -128,13 +138,13 @@ void adventure::Draw(Game& game)
 	const Math::FRECT& gridRect = m_quadTree.GetRect();
 
 	//Draws layers of stars
-	for(int i = 0; i < 6; ++i)
+	for (unsigned int i = 0; i < m_starOffsets.size(); ++i)
 	{
-		glm::mat4 T = glm::translate(glm::vec3(0.0f,0.0f,(float)zPos));
+		glm::mat4 T = glm::translate(glm::vec3(m_starOffsets[i].offset, (float)zPos));
 		T = glm::scale(T,glm::vec3(gridRect.Width(), gridRect.Height(),1.0f));
-		renderer.DrawSprite("stars",T,glm::vec4(1.0f),glm::vec2(40.0f / (i + 1),40.0f / (i + 1))); // 15
+		renderer.DrawSprite("stars", T, glm::vec4(glm::vec3(1.0f), m_starOffsets[i].color), glm::vec2(40.0f / (i + 1), 40.0f / (i + 1)));
 
-		zPos += 30;
+		zPos += 40;
 	}
 
 	//Loops over all enemies
@@ -322,6 +332,12 @@ void adventure::UpdateUserInput(Game& game)
 	if(input.KeyPress(KEY_F1))
 	{
 		m_bRenderQuadTree = !m_bRenderQuadTree;
+	}
+
+	if (input.KeyPress(KEY_F2))
+	{
+		m_bDisableColorClearing = !m_bDisableColorClearing;
+		renderer.EnableColorClearing(m_bDisableColorClearing);
 	}
 }
 
