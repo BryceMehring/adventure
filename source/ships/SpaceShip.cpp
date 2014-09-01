@@ -60,6 +60,7 @@ void SpaceShip::Destroy()
 {
 	m_iHealth -= 1;
 }
+
 bool SpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 {
 	WrapIfNeeded(tree.GetRect());
@@ -68,7 +69,8 @@ bool SpaceShip::Update(float dt, Camera& cam, QuadTree& tree)
 	m_collisonPolygon.GetCircle().center = glm::vec2(m_pos.x,m_pos.y);
 	tree.Insert(*this);
 
-	m_bVisable = cam.IsVisible(glm::vec3(m_pos.x - 50.0f,m_pos.y - 50.0f,-100.0f),glm::vec3(m_pos.x + 50.0f,m_pos.y + 50.0f,-100.0f));
+	Math::AABB collisionBox = m_collisonPolygon.GetAABB();
+	m_bVisable = cam.IsVisible(glm::vec3(collisionBox.min,-100.0f),glm::vec3(collisionBox.max,-100.0f));
 
 	return m_iHealth <= 0;
 }
