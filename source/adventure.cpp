@@ -81,6 +81,7 @@ void adventure::Destroy(Game& game)
 {
 	IRenderer& renderer = game.GetRenderer();
 	renderer.SetClearColor(glm::vec3(0.0f));
+	renderer.EnableColorClearing(true);
 	renderer.SetCamera(nullptr);
 }
 
