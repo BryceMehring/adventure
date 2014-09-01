@@ -256,6 +256,7 @@ void adventure::UpdateUserInput(Game& game)
 	// Update the z level of the camera via the mouse scroll
 	m_fCameraZVelocity += 200.0f * -input.MouseZ();
 	m_cameraPos.z += m_fCameraZVelocity * dt;
+	m_cameraPos.z = glm::clamp(m_cameraPos.z, 10.0f, 3000.0f);
 
 	double fps = 1.0 / dt;
 	m_fCameraZVelocity *= (fps / (fps + 2));
