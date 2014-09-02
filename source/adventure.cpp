@@ -54,7 +54,7 @@ void adventure::Init(Game& game)
 		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rand() % 5;
 
-		SpaceShip* pShip = new AISpaceShip("ship", shipTile, 30 + rand() % 100, pos);
+		SpaceShip* pShip = new AISpaceShip("ship", shipTile, 30 + rand() % 50, pos);
 
 		m_enemies.emplace_back(pShip);
 		m_quadTree.Insert(*pShip);
