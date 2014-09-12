@@ -24,7 +24,7 @@ extern "C" EXPORT IPlugin* CreatePlugin()
 	return new adventure();
 }
 
-adventure::adventure() : m_quadTree(Math::FRECT(glm::vec2(-8000,8000),glm::vec2(8000,-8000)),64), m_bRenderQuadTree(false)
+adventure::adventure() : m_quadTree(Math::FRECT(glm::vec2(-8000,8000), glm::vec2(8000,-8000)), 64, 4), m_bRenderQuadTree(false)
 {
 }
 adventure::~adventure()
@@ -355,10 +355,10 @@ void adventure::BuildGUI(Game& game)
 	m_gui.SetNode(m_rootNode);
 
 	Math::FRECT R;
-	renderer.GetStringRect("Toggle Options", 50.0f, FontAlignment::Left, R);
+	renderer.GetStringRect("Toggle Options", 40.0f, FontAlignment::Left, R);
 
 	auto pToggleButton = UI::GUIFactory<UI::Button>::CreateElement(game, glm::vec2(width - R.Width() / 2.0f, height), glm::vec4(0.0f,0.0f,0.0f,0.5f), glm::vec4(1.0f, 0.0f, 0.0f,0.5f),
-										 50.0f, "Toggle Options", std::bind(&adventure::ToggleCallback, this, _1));
+										 40.0f, "Toggle Options", std::bind(&adventure::ToggleCallback, this, _1));
 
 	m_gui.AddElement(m_rootNode, pToggleButton);
 
