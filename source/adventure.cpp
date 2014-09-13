@@ -248,22 +248,31 @@ void adventure::UpdateUserInput(Game& game)
 
 	const glm::ivec2& cursorPos = input.GetCursorPos();
 
-	// Update the camera with user input
-	if(input.KeyPress(KEY_UP, false) || ((float)cursorPos.y > 0.95f*height && cursorPos.x < 0.75*width))
+	if (!input.MouseClick(2, false))
 	{
-		m_cameraPos.y += 400.0f * dt;
+		input.ShowCursor(true);
+		// Update the camera with user input
+		if (input.KeyPress(KEY_UP, false) || ((float)cursorPos.y > 0.95f*height && cursorPos.x < 0.75*width))
+		{
+			m_cameraPos.y += 400.0f * dt;
+		}
+		if (input.KeyPress(KEY_DOWN, false) || (float)cursorPos.y < 0.05f*height)
+		{
+			m_cameraPos.y += -400.0f * dt;
+		}
+		if (input.KeyPress(KEY_LEFT, false) || (float)cursorPos.x < 0.05f*width)
+		{
+			m_cameraPos.x += -400.0f * dt;
+		}
+		if (input.KeyPress(KEY_RIGHT, false) || ((float)cursorPos.x > 0.95f*width && cursorPos.y < 0.95*height))
+		{
+			m_cameraPos.x += 400.0f * dt;
+		}
 	}
-	if(input.KeyPress(KEY_DOWN, false) || (float)cursorPos.y < 0.05f*height)
+	else
 	{
-		m_cameraPos.y += -400.0f * dt;
-	}
-	if(input.KeyPress(KEY_LEFT, false) || (float)cursorPos.x < 0.05f*width)
-	{
-		m_cameraPos.x += -400.0f * dt;
-	}
-	if(input.KeyPress(KEY_RIGHT, false) || ((float)cursorPos.x > 0.95f*width && cursorPos.y < 0.95*height))
-	{
-		m_cameraPos.x += 400.0f * dt;
+		input.ShowCursor(false);
+		m_cameraPos += -2.0f*glm::vec3(input.CursorAcceleration(), 0.0f);
 	}
 
 	// Update the z level of the camera via the mouse scroll
