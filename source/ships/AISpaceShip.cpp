@@ -1,6 +1,6 @@
 #include "AISpaceShip.h"
-#include <glm/gtc/random.hpp>
 #include <glm/gtx/transform.hpp>
+#include "Random.h"
 
 #include "IRenderer.h"
 
@@ -12,7 +12,8 @@ float AISpaceShip::MAX_FORCE = 4.0f;
 
 AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : SpaceShip(str,tile,s,pos)
 {
-	m_fSpeed = glm::linearRand(500.0f,800.0f);
+	Random& rnd = Random::Instance();
+	m_fSpeed = rnd.Generate(500.0f,800.0f);
 }
 
 bool AISpaceShip::Update(float dt, Camera& cam, QuadTree& tree)

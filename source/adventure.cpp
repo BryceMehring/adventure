@@ -9,7 +9,7 @@
 #include "ships/AISpaceShip.h"
 
 #include <glm/gtx/transform.hpp>
-#include <glm/gtc/random.hpp>
+#include "Random.h"
 #include <functional>
 #include <sstream>
 
@@ -48,13 +48,15 @@ void adventure::Init(Game& game)
 
 	m_enemies.reserve(1000);
 
+	Random& rnd = Random::Instance();
+
 	// ships
 	for(unsigned int i = 0; i < 1000; ++i)
 	{
-		glm::vec3 pos = glm::vec3(glm::linearRand(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
-		unsigned int shipTile = rand() % 5;
+		glm::vec3 pos = glm::vec3(rnd.GenerateVector(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
+		unsigned int shipTile = rnd.Generate(4);
 
-		SpaceShip* pShip = new AISpaceShip("ship", shipTile, 30 + rand() % 50, pos);
+		SpaceShip* pShip = new AISpaceShip("ship", shipTile, rnd.Generate(30.0f, 50.0f), pos);
 
 		m_enemies.emplace_back(pShip);
 		m_quadTree.Insert(*pShip);
@@ -64,7 +66,7 @@ void adventure::Init(Game& game)
 	for (unsigned int i = 0; i < 10; ++i)
 	{
 		StarData data;
-		data.offset = glm::vec2(glm::linearRand(-1000.0f, 1000.0f));
+		data.offset = glm::vec2(rnd.Generate(-1000.0f, 1000.0f));
 		data.color = (50 - i) / 40.0f; // 1 - 0
 
 		m_starOffsets.emplace_back(data);
