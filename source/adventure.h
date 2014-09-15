@@ -51,7 +51,15 @@ private:
 	void BuildGUI(Game& game);
 
 	std::vector<std::unique_ptr<SpaceShip>> m_ships;
-	std::deque<std::pair<glm::vec3,SpriteAnimation>> m_deathAnimation;
+
+	struct DeathAnimation
+	{
+		glm::vec3 pos;
+		glm::vec2 scale;
+		SpriteAnimation anim;
+	};
+
+	std::deque<DeathAnimation> m_deathAnimation;
 
 	PerspectiveCamera m_camera;
 	glm::vec3 m_cameraPos = glm::vec3(0, 0, 1000);

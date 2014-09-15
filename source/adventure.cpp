@@ -78,11 +78,8 @@ void adventure::Init(Game& game)
 	// init star offsets
 	for (unsigned int i = 0; i < 10; ++i)
 	{
-		StarData data;
-		data.offset = glm::vec2(rnd.Generate(-1000.0f, 1000.0f));
-		data.color = (50 - i) / 40.0f; // 1 - 0
-
-		m_starOffsets.emplace_back(data);
+		m_starOffsets.push_back({glm::vec2(rnd.Generate(-1000.0f, 1000.0f)),
+								 (50 - i) / 40.0f});
 	}
 
 	renderer.SetClearColor(glm::vec3(0.01f, 0.01f, 0.1f));
@@ -115,7 +112,7 @@ void adventure::Update(Game& game)
 
 		if(bDead)
 		{
-			m_deathAnimation.push_back(std::make_pair((*iter)->GetPos(),SpriteAnimation(90,30)));
+			m_deathAnimation.push_back({(*iter)->GetPos(), glm::vec2((*iter)->GetRadius() * 4.0f), SpriteAnimation(90,30)});
 			m_selectedObjects.erase(&(**iter));
 
 			m_quadTree.Erase(**iter);
@@ -130,7 +127,7 @@ void adventure::Update(Game& game)
 	// Update all the death animations
 	for(auto iter = m_deathAnimation.begin(); iter != m_deathAnimation.end(); )
 	{
-		if(iter->second.Update(game.GetDt()))
+		if(iter->anim.Update(game.GetDt()))
 		{
 			iter = m_deathAnimation.erase(iter);
 		}
@@ -171,10 +168,10 @@ void adventure::Draw(Game& game)
 
 	for(auto& iter : m_deathAnimation)
 	{
-		glm::mat4 T = glm::translate(glm::vec3(iter.first.x, iter.first.y, -90));
-		T = glm::scale(T,glm::vec3(200.0f,200.0f,1.0f));
+		glm::mat4 T = glm::translate(glm::vec3(iter.pos.x, iter.pos.y, -90));
+		T = glm::scale(T,glm::vec3(iter.scale, 1.0f));
 
-		renderer.DrawSprite("explosion",T,glm::vec4(1.0f,1.0f,1.0f,0.9f),glm::vec2(1),iter.second.GetTile());
+		renderer.DrawSprite("explosion",T,glm::vec4(1.0f,1.0f,1.0f,0.9f),glm::vec2(1),iter.anim.GetTile());
 	}
 
 	static float angle = 0.0f;
