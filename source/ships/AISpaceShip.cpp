@@ -10,7 +10,8 @@ float AISpaceShip::SEPARATION_WEIGHT = 0.0f;
 float AISpaceShip::USER_WEIGHT = 0.0f;
 float AISpaceShip::MAX_FORCE = 4.0f;
 
-AISpaceShip::AISpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) : SpaceShip(str,tile,s,pos)
+AISpaceShip::AISpaceShip(const std::string& sprite, unsigned int tile, float size, float repulsiveness, const glm::vec3& pos) :
+	SpaceShip(sprite, tile, size, repulsiveness, pos)
 {
 	Random& rnd = Random::Instance();
 	m_fSpeed = rnd.Generate(500.0f,800.0f);
@@ -134,9 +135,9 @@ glm::vec3 AISpaceShip::Separation(const std::vector<ISpatialObject *> &nearObjec
 		{
 			float d = glm::distance(m_pos, pShip->GetPos());
 
-			if(d > 0 && d < m_collisonPolygon.GetCircle().r * 3)
+			if(d > 0)
 			{
-				mean += glm::normalize(m_pos - pShip->GetPos()) / d;
+				mean += pShip->GetRepulsiveness() * glm::normalize(m_pos - pShip->GetPos()) / d;
 				count++;
 			}
 		}

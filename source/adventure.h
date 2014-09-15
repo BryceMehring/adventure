@@ -50,7 +50,7 @@ private:
 
 	void BuildGUI(Game& game);
 
-	std::vector<std::unique_ptr<SpaceShip>> m_enemies;
+	std::vector<std::unique_ptr<SpaceShip>> m_ships;
 	std::deque<std::pair<glm::vec3,SpriteAnimation>> m_deathAnimation;
 
 	PerspectiveCamera m_camera;

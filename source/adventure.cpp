@@ -46,19 +46,32 @@ void adventure::Init(Game& game)
 
 	renderer.SetCamera(&m_camera);
 
-	m_enemies.reserve(1000);
+	m_ships.reserve(1230);
 
 	Random& rnd = Random::Instance();
 
 	// ships
-	for(unsigned int i = 0; i < 1000; ++i)
+	for(unsigned int i = 0; i < 1200; ++i)
 	{
 		glm::vec3 pos = glm::vec3(rnd.GenerateVector(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
 		unsigned int shipTile = rnd.Generate(4);
 
-		SpaceShip* pShip = new AISpaceShip("ship", shipTile, rnd.Generate(30.0f, 50.0f), pos);
+		SpaceShip* pShip = new AISpaceShip("ship", shipTile, rnd.Generate(30.0f, 50.0f), 1, pos);
 
-		m_enemies.emplace_back(pShip);
+		m_ships.emplace_back(pShip);
+		m_quadTree.Insert(*pShip);
+	}
+
+	// Aliens
+	for(unsigned int i = 0; i < 30; ++i)
+	{
+		std::ostringstream stream;
+		stream << "alien" << rnd.Generate(1,4);
+
+		glm::vec3 pos = glm::vec3(rnd.GenerateVector(glm::vec2(-4000),glm::vec2(4000)),-100.0f);
+		SpaceShip* pShip = new AISpaceShip(stream.str(), 0, rnd.Generate(300.0f, 400.0f), 100, pos);
+
+		m_ships.emplace_back(pShip);
 		m_quadTree.Insert(*pShip);
 	}
 
@@ -96,7 +109,7 @@ void adventure::Update(Game& game)
 	}
 
 	// Update all of the enemy ships
-	for(auto iter = m_enemies.begin(); iter != m_enemies.end(); )
+	for(auto iter = m_ships.begin(); iter != m_ships.end(); )
 	{
 		bool bDead = (*iter)->Update((float)game.GetDt(),m_camera,m_quadTree);
 
@@ -106,7 +119,7 @@ void adventure::Update(Game& game)
 			m_selectedObjects.erase(&(**iter));
 
 			m_quadTree.Erase(**iter);
-			iter = m_enemies.erase(iter);
+			iter = m_ships.erase(iter);
 		}
 		else
 		{
@@ -151,7 +164,7 @@ void adventure::Draw(Game& game)
 	}
 
 	//Loops over all enemies
-	for(auto& iter : m_enemies)
+	for(auto& iter : m_ships)
 	{
 		iter->Render(renderer);
 	}
@@ -376,9 +389,9 @@ void adventure::BuildGUI(Game& game)
 	m_optionsNode = m_gui.CreateNode();
 	m_gui.LinkNodes(m_optionsNode, m_rootNode);
 
-	auto pUserWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, height / 5), glm::vec2(width - 50.0f, height / 5), 10.0f, 500.0f, 2,
+	auto pUserWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, height / 5), glm::vec2(width - 50.0f, height / 5), 10.0f, 30.0f, 2,
 															"blank", "User Weight", AISpaceShip::SetUserWeight);
-	pUserWeightBar->SetValue(10.0f);
+	pUserWeightBar->SetValue(15.0f);
 
 	auto pCohesionWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, 2 * height / 5), glm::vec2(width - 50.0f, 2 * height / 5), 0.0f, 10.0f, 2,
 														   "blank", "Cohesion Weight", AISpaceShip::SetCohesionWeight);
@@ -386,7 +399,7 @@ void adventure::BuildGUI(Game& game)
 	auto pAlignmentWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, 3 * height / 5), glm::vec2(width - 50.0f, 3 * height / 5), 0.0f, 10.0f, 2,
 															"blank", "Alignment Weight", AISpaceShip::SetAlignmentWeight);
 	pAlignmentWeightBar->SetValue(5.5f);
-	auto pSeperationWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, 4 * height / 5), glm::vec2(width - 50.0f, 4 * height / 5), 0.0f, 10000.0f, 2,
+	auto pSeperationWeightBar = std::make_shared<UI::Slider>(glm::vec2(50.0f, 4 * height / 5), glm::vec2(width - 50.0f, 4 * height / 5), 0.0f, 14000.0f, 2,
 															 "blank", "Separation Weight", AISpaceShip::SetSeparationWeight);
 	pSeperationWeightBar->SetValue(10000.0f);
 

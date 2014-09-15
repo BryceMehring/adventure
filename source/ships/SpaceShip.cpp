@@ -5,9 +5,9 @@
 #include "Random.h"
 #include <sstream>
 
-SpaceShip::SpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos) :
-	m_sprite(str), m_pos(pos), m_target(pos), m_bMoveToTarget(false), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),s)),
-	m_tile(tile), m_fSpeed(50.0f), m_bVisable(false), m_bCollison(false), m_iHealth(3)
+SpaceShip::SpaceShip(const std::string& sprite, unsigned int tile, float size, float repulsiveness, const glm::vec3& pos) :
+	m_sprite(sprite), m_pos(pos), m_target(pos), m_bMoveToTarget(false), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),size)),
+	m_tile(tile), m_fSpeed(50.0f), m_fRepulsiveness(repulsiveness), m_bVisable(false), m_bCollison(false), m_iHealth(3)
 {
 	Random& rnd = Random::Instance();
 	m_velocity = glm::vec3(rnd.GenerateVector(glm::vec2(-50.0f), glm::vec2(50.0f)), 0.0f);
@@ -36,6 +36,12 @@ float SpaceShip::GetSpeed() const
 {
 	return m_fSpeed;
 }
+
+float SpaceShip::GetRepulsiveness() const
+{
+	return m_fRepulsiveness;
+}
+
 void SpaceShip::SetSpeed(float speed)
 {
 	m_fSpeed = speed;

@@ -7,7 +7,11 @@ class AISpaceShip : public SpaceShip
 {
 public:
 
-	AISpaceShip(const std::string& str, unsigned int tile, float s,const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
+	AISpaceShip(const std::string& sprite,
+				unsigned int tile,
+				float size,
+				float repulsiveness,
+				const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
 
 	virtual bool Update(float dt, Camera& cam, QuadTree& tree);
 

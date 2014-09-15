@@ -16,13 +16,18 @@ class SpaceShip : public ISpatialObject, public IDestroyable
 {
 public:
 
-	SpaceShip(const std::string& str, unsigned int tile, float s, const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
+	SpaceShip(const std::string& sprite,
+			  unsigned int tile,
+			  float size,
+			  float repulsiveness,
+			  const glm::vec3& pos = glm::vec3(0.0f,0.0f,-100.0f));
 	virtual ~SpaceShip();
 
 	const glm::vec3& GetPos() const override;
 	const glm::vec3& GetDir() const;
 	float GetRadius() const;
 	float GetSpeed() const;
+	float GetRepulsiveness() const;
 	void SetSpeed(float speed);
 
 	void* QueryInterface(unsigned int) const override;
@@ -50,6 +55,7 @@ protected:
 	Math::CCircle m_collisonPolygon;
 	unsigned int m_tile;
 	float m_fSpeed;
+	float m_fRepulsiveness;
 	bool m_bVisable;
 	bool m_bCollison;
 	int m_iHealth;
