@@ -54,7 +54,7 @@ private:
 	std::deque<std::pair<glm::vec3,SpriteAnimation>> m_deathAnimation;
 
 	PerspectiveCamera m_camera;
-	glm::vec3 m_cameraPos = glm::vec3(0,0,400);
+	glm::vec3 m_cameraPos = glm::vec3(0, 0, 1000);
 	float m_fCameraZVelocity = 0.0f;
 
 	QuadTree m_quadTree;
