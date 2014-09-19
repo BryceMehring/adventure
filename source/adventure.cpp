@@ -260,23 +260,26 @@ void adventure::UpdateUserInput(Game& game)
 
 	if (!input.MouseClick(2, false))
 	{
-		input.ShowCursor(true);
-		// Update the camera with user input
-		if (input.KeyPress(KEY_UP, false) || ((float)cursorPos.y > 0.95f*height && cursorPos.x < 0.75*width))
+		if(input.IsCursorEntered())
 		{
-			m_cameraPos.y += 400.0f * dt;
-		}
-		if (input.KeyPress(KEY_DOWN, false) || (float)cursorPos.y < 0.05f*height)
-		{
-			m_cameraPos.y += -400.0f * dt;
-		}
-		if (input.KeyPress(KEY_LEFT, false) || (float)cursorPos.x < 0.05f*width)
-		{
-			m_cameraPos.x += -400.0f * dt;
-		}
-		if (input.KeyPress(KEY_RIGHT, false) || ((float)cursorPos.x > 0.95f*width && cursorPos.y < 0.95*height))
-		{
-			m_cameraPos.x += 400.0f * dt;
+			input.ShowCursor(true);
+			// Update the camera with user input
+			if (input.KeyPress(KEY_UP, false) || ((float)cursorPos.y > 0.95f*height && cursorPos.x < 0.75*width))
+			{
+				m_cameraPos.y += 400.0f * dt;
+			}
+			if (input.KeyPress(KEY_DOWN, false) || (float)cursorPos.y < 0.05f*height)
+			{
+				m_cameraPos.y += -400.0f * dt;
+			}
+			if (input.KeyPress(KEY_LEFT, false) || (float)cursorPos.x < 0.05f*width)
+			{
+				m_cameraPos.x += -400.0f * dt;
+			}
+			if (input.KeyPress(KEY_RIGHT, false) || ((float)cursorPos.x > 0.95f*width && cursorPos.y < 0.95*height))
+			{
+				m_cameraPos.x += 400.0f * dt;
+			}
 		}
 	}
 	else
@@ -299,7 +302,6 @@ void adventure::UpdateUserInput(Game& game)
 	// Check if the user made a selection with the mouse
 	if((m_drawSelectionQuad = input.GetSelectedRect(m_Min, m_Max)))
 	{
-
 		glm::vec3 unprojectedMin = m_camera.UnProjectWS(glm::vec3(m_Min, -99), glm::vec4(0.0f, 0.0f, width, height));
 		glm::vec3 unprojectedMax = m_camera.UnProjectWS(glm::vec3(m_Max, -99), glm::vec4(0.0f, 0.0f, width, height));
 
