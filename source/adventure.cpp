@@ -9,7 +9,7 @@
 #include "ships/AISpaceShip.h"
 
 #include <glm/gtx/transform.hpp>
-#include "Random.h"
+#include "RandomGenerator.h"
 #include <functional>
 #include <sstream>
 

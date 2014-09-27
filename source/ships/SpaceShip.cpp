@@ -2,7 +2,7 @@
 #include "IRenderer.h"
 #include "Camera.h"
 #include <glm/gtx/transform.hpp>
-#include "Random.h"
+#include "RandomGenerator.h"
 #include <sstream>
 
 SpaceShip::SpaceShip(const std::string& sprite, unsigned int tile, float size, float repulsiveness, const glm::vec3& pos) :
