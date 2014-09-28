@@ -76,7 +76,7 @@ void adventure::Init(Game& game)
 	}
 
 	// init star offsets
-	for (unsigned int i = 0; i < 10; ++i)
+	for (unsigned int i = 0; i < 8; ++i)
 	{
 		m_starOffsets.push_back({glm::vec2(rnd.Generate(-1000.0f, 1000.0f)),
 								 (50 - i) / 40.0f});
