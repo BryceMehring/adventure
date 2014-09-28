@@ -1,4 +1,4 @@
-adventure - A space adventure
+Adventure - A space Adventure
 =========
 
 This is a game that involves moving around ships that flock together.
