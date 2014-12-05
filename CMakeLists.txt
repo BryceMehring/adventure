@@ -22,7 +22,6 @@ include_directories(${GAME_ENGINE_INCLUDE_DIR}/source/GUI)
 
 find_package(GLM)
 include_directories(${GLM_INCLUDE_DIR})
-add_definitions(-DGLM_FORCE_RADIANS)
 
 RedirectOutputTo(plugin/adventure)
 add_subdirectory(${CMAKE_SOURCE_DIR}/source)
