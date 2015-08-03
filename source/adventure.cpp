@@ -48,7 +48,7 @@ void adventure::Init(Game& game)
 
 	m_ships.reserve(1230);
 
-	Random& rnd = Random::Instance();
+	RandomGenerator& rnd = RandomGenerator::Instance();
 
 	// ships
 	for(unsigned int i = 0; i < 1200; ++i)

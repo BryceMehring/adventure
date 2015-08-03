@@ -9,7 +9,7 @@ SpaceShip::SpaceShip(const std::string& sprite, unsigned int tile, float size, f
 	m_sprite(sprite), m_pos(pos), m_target(pos), m_bMoveToTarget(false), m_collisonPolygon(Math::Circle(glm::vec2(pos.x,pos.y),size)),
 	m_tile(tile), m_fSpeed(50.0f), m_fRepulsiveness(repulsiveness), m_bVisable(false), m_bCollison(false), m_iHealth(3)
 {
-	Random& rnd = Random::Instance();
+	RandomGenerator& rnd = RandomGenerator::Instance();
 	m_velocity = glm::vec3(rnd.GenerateVector(glm::vec2(-50.0f), glm::vec2(50.0f)), 0.0f);
 }
 

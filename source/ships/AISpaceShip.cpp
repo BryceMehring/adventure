@@ -13,7 +13,7 @@ float AISpaceShip::MAX_FORCE = 4.0f;
 AISpaceShip::AISpaceShip(const std::string& sprite, unsigned int tile, float size, float repulsiveness, const glm::vec3& pos) :
 	SpaceShip(sprite, tile, size, repulsiveness, pos)
 {
-	Random& rnd = Random::Instance();
+	RandomGenerator& rnd = RandomGenerator::Instance();
 	m_fSpeed = rnd.Generate(500.0f,800.0f);
 }
 
